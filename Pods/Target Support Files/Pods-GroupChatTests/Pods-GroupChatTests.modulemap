@@ -1,0 +1,6 @@
+framework module Pods_GroupChatTests {
+  umbrella header "Pods-GroupChatTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
