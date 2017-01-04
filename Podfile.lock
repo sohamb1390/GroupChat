@@ -1,5 +1,4 @@
 PODS:
-  - ALLoadingView (1.0.2)
   - Firebase/Auth (3.11.0):
     - Firebase/Core
     - FirebaseAuth (= 3.1.0)
@@ -50,6 +49,13 @@ PODS:
   - FirebaseStorage (1.0.5):
     - FirebaseAnalytics (~> 3.5)
     - GTMSessionFetcher/Core (~> 1.1)
+  - FTIndicator (1.1.6):
+    - FTIndicator/FTNotificationIndicator (= 1.1.6)
+    - FTIndicator/FTProgressIndicator (= 1.1.6)
+    - FTIndicator/FTToastIndicator (= 1.1.6)
+  - FTIndicator/FTNotificationIndicator (1.1.6)
+  - FTIndicator/FTProgressIndicator (1.1.6)
+  - FTIndicator/FTToastIndicator (1.1.6)
   - GoogleInterchangeUtilities (1.2.2):
     - GoogleSymbolUtilities (~> 1.1)
   - GoogleSymbolUtilities (1.1.2)
@@ -66,27 +72,30 @@ PODS:
     - GoogleToolboxForMac/NSString+URLArguments (= 2.1.0)
   - GoogleToolboxForMac/NSString+URLArguments (2.1.0)
   - GTMSessionFetcher/Core (1.1.7)
+  - JDropDownAlert (1.0.2)
   - JSQMessagesViewController (7.3.4):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
+  - OpinionzAlertView (0.3.1)
   - RxCocoa (3.0.1):
     - RxSwift (~> 3.0)
   - RxSwift (3.0.1)
 
 DEPENDENCIES:
-  - ALLoadingView
   - Firebase/Auth
   - Firebase/Core
   - Firebase/Crash
   - Firebase/Database
   - Firebase/Messaging
   - Firebase/Storage
+  - FTIndicator
+  - JDropDownAlert
   - JSQMessagesViewController
+  - OpinionzAlertView
   - RxCocoa (~> 3.0)
   - RxSwift (~> 3.0)
 
 SPEC CHECKSUMS:
-  ALLoadingView: 14a12aaff639a676de662634e3e44b62f17e96ec
   Firebase: b8134e285eb33201115bc688bc5d7f112923bc1f
   FirebaseAnalytics: 9c67af0ebeb8d2146c9b4ea2616439affa947b58
   FirebaseAuth: b436e4ecebe068bf8e8c6e4e29de5756ffe7ee24
@@ -96,15 +105,18 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: ba1e640935235e5fac39dfa816fe7660e72e1a8a
   FirebaseMessaging: acf66347e43c5637c697060c3001d25c809a4131
   FirebaseStorage: 5738284835edb57f0e81d4ae5832bb17c1e4b5fa
+  FTIndicator: c005c5787dbb6c40e0aa5af791e60ac1f164e3c0
   GoogleInterchangeUtilities: d5bc4d88d5b661ab72f9d70c58d02ca8c27ad1f7
   GoogleSymbolUtilities: 631ee17048aa5e9ab133470d768ea997a5ef9b96
   GoogleToolboxForMac: 2b2596cbb7186865e98cadf2b1e262d851c2b168
   GTMSessionFetcher: a1f8ed39e4fe21c68957daed472c7afbcdf29166
+  JDropDownAlert: ae5f11d1fafa97313d745ef84556ae8a35c86bd0
   JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
+  OpinionzAlertView: 213cf7fa544091962ebd9526ff2e7e120b13c149
   RxCocoa: 15a52fc590dcc700cb4a690a633b5c5184ce3a78
   RxSwift: af5680055c4ad04480189c52d28385b1029493a6
 
-PODFILE CHECKSUM: ac26aca2896ee92dd45d40924d25c4f9cbe10112
+PODFILE CHECKSUM: ce80332d8f86b19089087839b62f59355cbdda80
 
 COCOAPODS: 1.1.1

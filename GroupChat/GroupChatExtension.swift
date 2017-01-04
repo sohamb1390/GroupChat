@@ -8,8 +8,8 @@
 
 import Foundation
 import UIKit
-import ALLoadingView
-
+import FTIndicator
+import JDropDownAlert
 extension UIView {
     func shake() {
         let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
@@ -20,12 +20,17 @@ extension UIView {
     }
 }
 extension UIViewController {
-    func showAlert(title: String, message: String, action: [UIAlertAction]) {
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        for actionItem in action {
-            alertController.addAction(actionItem)
+    func showAlert(title: String, message: String, alertBGColor: UIColor) {
+        let alert = JDropDownAlert(position: .top, direction: .normal)
+        alert.alertWith(title, message: message, topLabelColor: .white, messageLabelColor: .white, backgroundColor: alertBGColor)
+        alert.didTapBlock = {
+            
         }
-        self.present(alertController, animated: true, completion: nil)
+//        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+//        for actionItem in action {
+//            alertController.addAction(actionItem)
+//        }
+//        self.present(alertController, animated: true, completion: nil)
     }
     func popToSignInSignOutScreen() {
         let controllersArray = navigationController?.viewControllers
@@ -37,22 +42,14 @@ extension UIViewController {
     }
 }
 extension UIApplication {
-    func showNetworkLoader(messageText: String, shouldUseBlurredBG: Bool, font: UIFont) {
+    func showNetworkLoader(messageText: String) {
         isNetworkActivityIndicatorVisible = true
         
-        ALLoadingView.manager.messageText = messageText
-        ALLoadingView.manager.messageFont = font
-        ALLoadingView.manager.blurredBackground = shouldUseBlurredBG
-        ALLoadingView.manager.showLoadingView(ofType: .messageWithIndicator, windowMode: .fullscreen, completionBlock: nil)
+        FTIndicator.showProgressWithmessage(messageText, userInteractionEnable: true)
+        FTIndicator.setIndicatorStyle(.dark)
     }
-    func hideNetworkLoader(delay: TimeInterval, completionBlock: @escaping(_ completed: Bool) -> Void) {
-        ALLoadingView.manager.hideLoadingView(withDelay: delay) {
-            self.isNetworkActivityIndicatorVisible = false
-            completionBlock(true)
-        }
-    }
-    func hideNetworkLoaderWithoutCompletionHandler() {
-        ALLoadingView.manager.hideLoadingView()
+    func hideNetworkLoader() {
+        FTIndicator.dismissProgress()
         self.isNetworkActivityIndicatorVisible = false
     }
 }

@@ -1,0 +1,6 @@
+framework module OpinionzAlertView {
+  umbrella header "OpinionzAlertView-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -7,11 +7,12 @@
 //
 
 import UIKit
-import ALLoadingView
+import FTIndicator
 import Firebase
 import RxSwift
 import RxCocoa
 import MobileCoreServices
+import OpinionzAlertView
 
 class SignInSignUpViewController: UIViewController {
     
@@ -69,14 +70,13 @@ class SignInSignUpViewController: UIViewController {
         viewModel = GroupChatViewModel()
         
         // Token Refresh
-        UIApplication.shared.showNetworkLoader(messageText: "Checking for existing session", shouldUseBlurredBG: true, font: UIFont(name: "AvenirNext-Regular", size: 15.0)!)
+        UIApplication.shared.showNetworkLoader(messageText: "Checking for existing session")
         
         viewModel!.tokenRefresh { (error, isEmailVerified) in
-            UIApplication.shared.hideNetworkLoader(delay: 1.0, completionBlock: { (completed) in
-                if error == nil, isEmailVerified {
-                    self.performSegue(withIdentifier: SegueConstants.groupListSegue, sender: self)
-                }
-            })
+            UIApplication.shared.hideNetworkLoader()
+            if error == nil, isEmailVerified {
+                self.performSegue(withIdentifier: SegueConstants.groupListSegue, sender: self)
+            }
         }
         // Register Keyboard observer only for smaller devices
         if UIDevice().screenType == .iPhone5 || UIDevice().screenType == .iPhone4 {
@@ -164,7 +164,7 @@ class SignInSignUpViewController: UIViewController {
         retypePwdTextField.isHidden = sender.tag == 1
         userNameTextField.isHidden = sender.tag == 1
         lblSignInSignUp.text = sender.tag == 1 ? "Sign In" : "Sign Up"
-        btnSignInSignUp.setTitle(sender.tag == 1 ? "Already have an account?" : "Don't have an account?", for: .normal)
+        btnSignInSignUp.setTitle(sender.tag == 1 ? "Don't have an account?" : "Already have an account?", for: .normal)
         
         // Clear textField for Sign Up/ Sign In
         userNameTextField.text = ""
@@ -175,59 +175,72 @@ class SignInSignUpViewController: UIViewController {
     }
     private func signIn() {
         
-        UIApplication.shared.showNetworkLoader(messageText: "Signing you In", shouldUseBlurredBG: true, font: UIFont(name: "AvenirNext-Regular", size: 15.0)!)
-        
+        UIApplication.shared.showNetworkLoader(messageText: "Signing you In")
+
         // Sign In
         viewModel!.signIn(userEmail: userEmailTextField.text!, password: pwdTextField.text!) { (user: FIRUser?, error: Error?) in
-            UIApplication.shared.hideNetworkLoader(delay: 1.0, completionBlock: { (completed) in
-                if let err = error {
-                    print("Error Info: \(err.localizedDescription)")
-                    let errorDesc = FirebaseError.getErrorDesc(error: err)
-                    self.showAlert(title: "Unable to Sign In", message: errorDesc, action: [UIAlertAction.init(title: "Ok", style: .default, handler: nil)])
+            UIApplication.shared.hideNetworkLoader()
+            if let err = error {
+                print("Error Info: \(err.localizedDescription)")
+                let errorDesc = FirebaseError.getErrorDesc(error: err)
+                self.showAlert(title: "Unable to Sign In", message: errorDesc, alertBGColor: .red)
+
+            }
+            else {
+                print("User Info: \(user.debugDescription)")
+                // When email is verified
+                if user!.isEmailVerified {
+                    // Navigating to Group List Screen
+                    self.performSegue(withIdentifier: SegueConstants.groupListSegue, sender: self)
                 }
                 else {
-                    print("User Info: \(user.debugDescription)")
-                    // When email is verified
-                    if user!.isEmailVerified {
-                        // Navigating to Group List Screen
-                        self.performSegue(withIdentifier: SegueConstants.groupListSegue, sender: self)
-                    }
-                    else {
-                        self.showAlert(title: "Email is not verified", message: "Please accept the verification mail that has been sent to your email id: \(self.userEmailTextField.text!). Please verify your mail before proceeding. If you didn't recieve the mail, please send it again.", action: [UIAlertAction(title: "Send Again", style: .default, handler: { action in
-                            self.viewModel?.resendVerificationMail(completionHandler: { error in
-                                guard let _ = error else {
-                                    self.showAlert(title: "Unable to send Verification Mail", message: "We are unable to send the verification mail to your email id, please try again later", action: [UIAlertAction(title: "Ok", style: .default, handler: nil)])
-                                    return
-                                }
-                                self.showAlert(title: "Verification mail sent", message: "Please check your mail and verify your mail address and try to sign in", action: [UIAlertAction(title: "Ok", style: .default, handler: nil)])
-                            })
-                        }), UIAlertAction(title: "Ok", style: .default, handler: nil)])
-                    }
+                    let alertView = OpinionzAlertView(title: "Email is not verified", message: "Please accept the verification mail that has been sent to your email id: \(self.userEmailTextField.text!). Please verify your mail before proceeding. If you didn't recieve the mail, please send it again.", cancelButtonTitle: "Cancel", otherButtonTitles: ["Send Again"], usingBlockWhenTapButton: { (alertView, index) in
+                        
+                        self.viewModel?.resendVerificationMail(completionHandler: { error in
+                            guard let _ = error else {
+                                self.showAlert(title: "Unable to send Verification Mail", message: "We are unable to send the verification mail to your email id, please try again later", alertBGColor: .red)
+                                return
+                            }
+                            self.showAlert(title: "Verification mail sent", message: "Please check your mail and verify your mail address and try to sign in", alertBGColor: .green)
+                        })
+                        
+                    })
+                    alertView?.iconType = OpinionzAlertIconWarning
+                    alertView?.show()
+//                    
+//                    self.showAlert(title: "Email is not verified", message: "Please accept the verification mail that has been sent to your email id: \(self.userEmailTextField.text!). Please verify your mail before proceeding. If you didn't recieve the mail, please send it again.", action: [UIAlertAction(title: "Send Again", style: .default, handler: { action in
+//                        self.viewModel?.resendVerificationMail(completionHandler: { error in
+//                            guard let _ = error else {
+//                                self.showAlert(title: "Unable to send Verification Mail", message: "We are unable to send the verification mail to your email id, please try again later", action: [UIAlertAction(title: "Ok", style: .default, handler: nil)])
+//                                return
+//                            }
+//                            self.showAlert(title: "Verification mail sent", message: "Please check your mail and verify your mail address and try to sign in", action: [UIAlertAction(title: "Ok", style: .default, handler: nil)])
+//                        })
+//                    }), UIAlertAction(title: "Ok", style: .default, handler: nil)])
                 }
-            })
+            }
         }
     }
     private func signUp() {
-        UIApplication.shared.showNetworkLoader(messageText: "Signing Up", shouldUseBlurredBG: true, font: UIFont(name: "AvenirNext-Regular", size: 15.0)!)
-        
+
         // Sign Up
         // Creating the User using Email & Password
+        UIApplication.shared.showNetworkLoader(messageText: "Signing Up")
+
         viewModel!.signUp(userName: userNameTextField.text!, userEmail: userEmailTextField.text!, password: retypePwdTextField.text!, userImage: btnPhoto.imageView?.image, completionHandler: { (user: FIRUser?, error: Error?) in
-            OperationQueue.main.addOperation({
-                UIApplication.shared.hideNetworkLoaderWithoutCompletionHandler()
-                if let err = error {
-                    print("Error Info: \(err.localizedDescription)")
-                    let errorDesc = FirebaseError.getErrorDesc(error: err)
-                    self.showAlert(title: "Unable to Sign Up", message: errorDesc, action: [UIAlertAction.init(title: "Ok", style: .default, handler: nil)])
-                }
-                else {
-                    print("User Info: \(user.debugDescription)")
-                    self.showAlert(title: "Verification mail sent", message: "Please check your mail and verify your mail address and try to sign in", action: [UIAlertAction(title: "Ok", style: .default, handler: nil)])
-                    
-                    // Now revert back to Sign In UI
-                    self.toggleSignInSignUp(sender: self.btnSignInSignUp)
-                }
-            })
+            UIApplication.shared.hideNetworkLoader()
+            if let err = error {
+                print("Error Info: \(err.localizedDescription)")
+                let errorDesc = FirebaseError.getErrorDesc(error: err)
+                self.showAlert(title: "Unable to Sign Up", message: errorDesc, alertBGColor: .red)
+            }
+            else {
+                print("User Info: \(user.debugDescription)")
+                self.showAlert(title: "Verification mail sent", message: "Please check your mail and verify your mail address and try to sign in", alertBGColor: .green)
+                
+                // Now revert back to Sign In UI
+                self.toggleSignInSignUp(sender: self.btnSignInSignUp)
+            }
         })
     }
     

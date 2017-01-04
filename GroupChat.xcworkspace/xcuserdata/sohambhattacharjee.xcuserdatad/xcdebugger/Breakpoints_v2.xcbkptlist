@@ -9,54 +9,6 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "GroupChat/Model/FireBaseHandler.swift"
-            timestampString = "505142069.165295"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "91"
-            endingLineNumber = "91"
-            landmarkName = "createChat(ref:storageRef:chatChildName:chatData:mediaName:groupID:completionHandler:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "GroupChat/Model/FireBaseHandler.swift"
-            timestampString = "505142070.46506"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "86"
-            endingLineNumber = "86"
-            landmarkName = "createChat(ref:storageRef:chatChildName:chatData:mediaName:groupID:completionHandler:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "GroupChat/Model/FireBaseHandler.swift"
-            timestampString = "505144631.826877"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "81"
-            endingLineNumber = "81"
-            landmarkName = "createChat(ref:storageRef:chatChildName:chatData:mediaName:groupID:completionHandler:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "GroupChat/ViewModel/GroupChatViewModel.swift"
             timestampString = "505143599.604151"
             startingColumnNumber = "9223372036854775807"
@@ -65,70 +17,6 @@
             endingLineNumber = "88"
             landmarkName = "getGroupID(groupName:)"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "GroupChat/Controller/AddGroupViewController.swift"
-            timestampString = "505143831.947404"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "114"
-            endingLineNumber = "114"
-            landmarkName = "addGroup()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "GroupChat/Controller/AddGroupViewController.swift"
-            timestampString = "505143671.124699"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "111"
-            endingLineNumber = "111"
-            landmarkName = "addGroup()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "GroupChat.AddGroupViewController.addGroup () -&gt; ()"
-                  moduleName = "GroupChat"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/sohambhattacharjee/Documents/Project/GroupChat/GroupChat/Controller/AddGroupViewController.swift"
-                  timestampString = "505144540.758827"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "111"
-                  endingLineNumber = "111"
-                  offsetFromSymbolStart = "390">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "GroupChat.AddGroupViewController.(addGroup () -&gt; ()).(closure #1)"
-                  moduleName = "GroupChat"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/sohambhattacharjee/Documents/Project/GroupChat/GroupChat/Controller/AddGroupViewController.swift"
-                  timestampString = "505144540.761017"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "114"
-                  endingLineNumber = "114"
-                  offsetFromSymbolStart = "27">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -185,8 +73,8 @@
                   symbolName = "GroupChat.ViewController.viewDidAppear (Swift.Bool) -&gt; ()"
                   moduleName = "GroupChat"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/sohambhattacharjee/Documents/Project/GroupChat/GroupChat/ViewController.swift"
-                  timestampString = "505144540.78347"
+                  urlString = "file:///Users/sohambhattacharjee/Documents/Project/SourceTree-Repo/GroupChat/GroupChat/ViewController.swift"
+                  timestampString = "505208371.140673"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "65"
@@ -200,8 +88,8 @@
                   symbolName = "GroupChat.ViewController.(viewDidAppear (Swift.Bool) -&gt; ()).(closure #2)"
                   moduleName = "GroupChat"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/sohambhattacharjee/Documents/Project/GroupChat/GroupChat/ViewController.swift"
-                  timestampString = "505144540.785912"
+                  urlString = "file:///Users/sohambhattacharjee/Documents/Project/SourceTree-Repo/GroupChat/GroupChat/ViewController.swift"
+                  timestampString = "505208371.142636"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "67"
@@ -233,8 +121,8 @@
                   symbolName = "GroupChat.ViewController.viewDidAppear (Swift.Bool) -&gt; ()"
                   moduleName = "GroupChat"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/sohambhattacharjee/Documents/Project/GroupChat/GroupChat/ViewController.swift"
-                  timestampString = "505144540.790739"
+                  urlString = "file:///Users/sohambhattacharjee/Documents/Project/SourceTree-Repo/GroupChat/GroupChat/ViewController.swift"
+                  timestampString = "505208371.150058"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "67"
@@ -248,8 +136,8 @@
                   symbolName = "GroupChat.ViewController.(viewDidAppear (Swift.Bool) -&gt; ()).(closure #2)"
                   moduleName = "GroupChat"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/sohambhattacharjee/Documents/Project/GroupChat/GroupChat/ViewController.swift"
-                  timestampString = "505144540.792986"
+                  urlString = "file:///Users/sohambhattacharjee/Documents/Project/SourceTree-Repo/GroupChat/GroupChat/ViewController.swift"
+                  timestampString = "505208371.15393"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "67"

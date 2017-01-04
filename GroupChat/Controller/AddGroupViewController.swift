@@ -9,7 +9,6 @@
 import UIKit
 import Firebase
 import FirebaseDatabase
-import ALLoadingView
 
 @objc protocol AddGroupDelegate {
     func loadUpdatedGroups()
@@ -106,31 +105,27 @@ extension AddGroupViewController {
     
     // MARK: Add a new group
     func addGroup() {
-        UIApplication.shared.showNetworkLoader(messageText: "Adding your group", shouldUseBlurredBG: true, font: UIFont(name: "AvenirNext-Regular", size: 15.0)!)
-        
+        UIApplication.shared.showNetworkLoader(messageText: "Adding your group")
+
         viewModel.checkGroupNameAlreadyExists(groupChildName: "Groups", currentGroupName: groupNameTextField.text!) { (doesExist) in
-            
             // Firebase reference found, now do the next checkings
             if doesExist {
-                UIApplication.shared.hideNetworkLoader(delay: 1.0, completionBlock: { (completed) in
-                    self.showAlert(title: "Unable to add your group!", message: "Group name already exists", action: [UIAlertAction(title: "Try Again", style: .default, handler: nil)])
-                })
-                
+                UIApplication.shared.hideNetworkLoader()
+                self.showAlert(title: "Unable to add your group", message: "Group name already exists", alertBGColor: .red)
             }
             else {
                 self.viewModel.addGroup(groupChildName: "Groups", groupName: self.groupNameTextField.text!, password: self.retypePwdTextField.text!, completionHandler: { (groupID, error) in
-                    UIApplication.shared.hideNetworkLoader(delay: 1.0, completionBlock: { (completed) in
-                        if let err = error {
-                            self.showAlert(title: "Unable to add your group!", message: FirebaseError.getErrorDesc(error: err), action: [UIAlertAction.init(title: "Try Again", style: .default, handler: nil)])
-                        }
-                        else {
-                            self.dismiss(animated: true, completion: {
-                                if self.delegate != nil {
-                                    self.delegate?.loadUpdatedGroups()
-                                }
-                            })
-                        }
-                    })
+                    UIApplication.shared.hideNetworkLoader()
+                    if let err = error {
+                        self.showAlert(title: "Unable to add your group", message: FirebaseError.getErrorDesc(error: err), alertBGColor: .red)
+                    }
+                    else {
+                        self.dismiss(animated: true, completion: {
+                            if self.delegate != nil {
+                                self.delegate?.loadUpdatedGroups()
+                            }
+                        })
+                    }
                 })
             }
         }
