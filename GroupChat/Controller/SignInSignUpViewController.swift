@@ -15,6 +15,10 @@ import MobileCoreServices
 import OpinionzAlertView
 import JJMaterialTextField
 
+enum Mode: String {
+    case SignIn = "SignIn", SignUp = "SignUp"
+}
+
 class SignInSignUpViewController: UIViewController {
     
     // MARK: IBOutlets
@@ -22,45 +26,80 @@ class SignInSignUpViewController: UIViewController {
     @IBOutlet weak var btnSignInSignUp: UIButton!
     @IBOutlet weak var btnPhoto: UIButton!
     
-    @IBOutlet weak var userEmailTextField: JJMaterialTextfield! {
+    @IBOutlet weak var signInUserEmailTextField: JJMaterialTextfield! {
         didSet {
-            userEmailTextField.returnKeyType = .next
-            userEmailTextField.keyboardType = .emailAddress
-            userEmailTextField.delegate = self
-            userEmailTextField.adjustsFontForContentSizeCategory = true
-            userEmailTextField.attributedPlaceholder = NSAttributedString(string: "Email ID",
+            signInUserEmailTextField.returnKeyType = .next
+            signInUserEmailTextField.keyboardType = .emailAddress
+            signInUserEmailTextField.delegate = self
+            signInUserEmailTextField.adjustsFontForContentSizeCategory = true
+            signInUserEmailTextField.attributedPlaceholder = NSAttributedString(string: "Email ID",
                                                                    attributes: [NSForegroundColorAttributeName: UIColor.white])
         }
     }
-    @IBOutlet weak var userNameTextField: UITextField! {
+    @IBOutlet weak var signUpUserEmailTextField: JJMaterialTextfield! {
+        didSet {
+            signUpUserEmailTextField.returnKeyType = .next
+            signUpUserEmailTextField.keyboardType = .emailAddress
+            signUpUserEmailTextField.delegate = self
+            signUpUserEmailTextField.adjustsFontForContentSizeCategory = true
+            signUpUserEmailTextField.attributedPlaceholder = NSAttributedString(string: "Email ID",
+                                                                                attributes: [NSForegroundColorAttributeName: UIColor.white])
+        }
+    }
+    @IBOutlet weak var userNameTextField: JJMaterialTextfield! {
         didSet {
             userNameTextField.returnKeyType = .next
             userNameTextField.keyboardType = .default
             userNameTextField.delegate = self
+            userNameTextField.adjustsFontForContentSizeCategory = true
+            userNameTextField.attributedPlaceholder = NSAttributedString(string: "Username",
+                                                                          attributes: [NSForegroundColorAttributeName: UIColor.white])
+
         }
     }
-    @IBOutlet weak var pwdTextField: JJMaterialTextfield! {
+    @IBOutlet weak var signInPwdTextField: JJMaterialTextfield! {
         didSet {
-            pwdTextField.isSecureTextEntry = true
-            pwdTextField.returnKeyType = .next
-            pwdTextField.delegate = self
+            signInPwdTextField.isSecureTextEntry = true
+            signInPwdTextField.returnKeyType = .next
+            signInPwdTextField.delegate = self
+            signInPwdTextField.adjustsFontForContentSizeCategory = true
+            signInPwdTextField.attributedPlaceholder = NSAttributedString(string: "Password",
+                                                                         attributes: [NSForegroundColorAttributeName: UIColor.white])
+
         }
     }
+    @IBOutlet weak var signUpPwdTextField: JJMaterialTextfield! {
+        didSet {
+            signUpPwdTextField.isSecureTextEntry = true
+            signUpPwdTextField.returnKeyType = .next
+            signUpPwdTextField.delegate = self
+            signUpPwdTextField.adjustsFontForContentSizeCategory = true
+            signUpPwdTextField.attributedPlaceholder = NSAttributedString(string: "Password",
+                                                                    attributes: [NSForegroundColorAttributeName: UIColor.white])
+            
+        }
+    }
+    
     @IBOutlet weak var retypePwdTextField: JJMaterialTextfield! {
         didSet {
             retypePwdTextField.isSecureTextEntry = true
             retypePwdTextField.returnKeyType = .next
             retypePwdTextField.delegate = self
+            retypePwdTextField.adjustsFontForContentSizeCategory = true
+            retypePwdTextField.attributedPlaceholder = NSAttributedString(string: "Retype your password",
+                                                                    attributes: [NSForegroundColorAttributeName: UIColor.white])
+
         }
     }
-    @IBOutlet weak var topConstraintRetypePasswordField: NSLayoutConstraint!
-    @IBOutlet weak var topConstraintPasswordField: NSLayoutConstraint!
-    @IBOutlet weak var topConstraintEmailField: NSLayoutConstraint!
-    @IBOutlet weak var buttonTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var blurViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var signInViewXConstraint: NSLayoutConstraint!
+    @IBOutlet weak var signUpViewXConstraint: NSLayoutConstraint!
+    @IBOutlet weak var signInBlurViewYConstraint: NSLayoutConstraint!
+    @IBOutlet weak var signUpBlurViewYConstraint: NSLayoutConstraint!
+
+    
     // MARK: Variables
     var viewModel: GroupChatViewModel?
-    
+    var currentMode: Mode = .SignIn
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -83,11 +122,10 @@ class SignInSignUpViewController: UIViewController {
             }
         }
         // Register Keyboard observer only for smaller devices
-        if UIDevice().screenType == .iPhone5 || UIDevice().screenType == .iPhone4 {
-            // Keyboard observers
-            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHandler(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHandler(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+
+        signUpViewXConstraint.constant = -view.frame.size.width
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -110,79 +148,92 @@ class SignInSignUpViewController: UIViewController {
     
     // MARK: - Actions
     // MARK: SignIn, SignUp
-    @IBAction func toggleSignInSignUp(sender: UIButton) {
-        
-        let smallConstant = Double(20.0)
-        let bigConstant = Double(30.0)
-        
-        var buttonPreviousConstant: Double = 0.0
-        var userEmailConstant: Double = 0.0
-        var updatedConstant: Double = 0.0
-        
-        switch sender.tag {
-        case 1:
-            // Sign Up
-            sender.tag = 2
-            
-            buttonPreviousConstant = bigConstant + (Double)(retypePwdTextField.frame.size.height)
-            userEmailConstant = smallConstant
-            updatedConstant = smallConstant
-            
-            // Focus on UserName TextField for Sign Up
-            userNameTextField.becomeFirstResponder()
+    @IBAction func changeMode(sender: UIButton) {
+        switch currentMode {
+        case .SignIn:
+            currentMode = .SignUp
+            signInViewXConstraint.constant = -view.frame.size.width
+            UIView.animate(withDuration: 0.2, animations: {
+                self.view.layoutIfNeeded()
+            }, completion: { (animated) in
+                self.signUpViewXConstraint.constant = 0.0
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.view.layoutIfNeeded()
+                })
+            })
             break
-        case 2:
-            // Sign In
-            sender.tag = 1
-            updatedConstant = -((Double)(retypePwdTextField.frame.size.height) + smallConstant)
-            userEmailConstant = -bigConstant
-            buttonPreviousConstant = smallConstant
-            userEmailTextField.becomeFirstResponder()
-            break
-        default:
-            break
+        case .SignUp:
+            currentMode = .SignIn
+            self.signUpViewXConstraint.constant = -self.view.frame.size.width
+
+            UIView.animate(withDuration: 0.2, animations: {
+                self.view.layoutIfNeeded()
+            }, completion: { (animated) in
+                self.signInViewXConstraint.constant = 0.0
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.view.layoutIfNeeded()
+                })
+            })
         }
-        topConstraintEmailField.constant = CGFloat(userEmailConstant)
-        topConstraintRetypePasswordField.constant = CGFloat(updatedConstant)
-        buttonTopConstraint.constant = CGFloat(buttonPreviousConstant)
-        
-        UIView.animate(withDuration: 0.5, animations: {
-            self.view.layoutIfNeeded()
-        })
         
         // Change states of UILabel & UIbutton
-        changeState(sender: btnSignInSignUp)
+        changeState()
     }
-    func signInSignUp() {
-        if btnSignInSignUp.tag == 1 {
-            signIn()
-        }
-        else if btnSignInSignUp.tag == 2 {
-            signUp()
+    
+    @IBAction func toggleSignInSignUp(_ sender: UIButton) {
+        switch currentMode {
+        case .SignIn:
+            guard let email = signInUserEmailTextField.text, !email.isEmpty, isValidEmail(testStr: email) else {
+                signInUserEmailTextField.shake()
+                return
+            }
+            guard let password = signInPwdTextField.text, !password.isEmpty else {
+                signInPwdTextField.shake()
+                return
+            }
+            signIn(EmailID: email, Password: password)
+            break
+        case .SignUp:
+            guard let userName = userNameTextField.text, !userName.isEmpty else {
+                userNameTextField.shake()
+                return
+            }
+            guard let email = signUpUserEmailTextField.text, !email.isEmpty, isValidEmail(testStr: email) else {
+                signUpUserEmailTextField.shake()
+                return
+            }
+            guard let password = signUpPwdTextField.text, !password.isEmpty, password.characters.count >= 6 else {
+                signUpPwdTextField.shake()
+                return
+            }
+            guard let retypePassword = retypePwdTextField.text, !retypePassword.isEmpty, retypePassword == password else {
+                retypePwdTextField.shake()
+                return
+            }
+            signUp(UserName: userName, EmailID: email, Password: retypePassword)
+            break
         }
     }
     
     // MARK: Private implementations
-    private func changeState(sender: UIButton) {
-        btnPhoto.isHidden = sender.tag == 1
-        retypePwdTextField.isHidden = sender.tag == 1
-        userNameTextField.isHidden = sender.tag == 1
-        lblSignInSignUp.text = sender.tag == 1 ? "Sign In" : "Sign Up"
-        btnSignInSignUp.setTitle(sender.tag == 1 ? "Don't have an account?" : "Already have an account?", for: .normal)
+    private func changeState() {
+        btnPhoto.isHidden = currentMode == .SignIn
+        btnSignInSignUp.setTitle(currentMode == .SignIn ? "Don't have an account?" : "Already have an account?", for: .normal)
         
         // Clear textField for Sign Up/ Sign In
         userNameTextField.text = ""
-        userEmailTextField.text = ""
-        pwdTextField.text = ""
+        signInUserEmailTextField.text = ""
+        signUpUserEmailTextField.text = ""
+        signInPwdTextField.text = ""
+        signUpPwdTextField.text = ""
         retypePwdTextField.text = ""
-        
     }
-    private func signIn() {
-        
+    private func signIn(EmailID email: String, Password pwd: String) {
+        view.endEditing(true)
         UIApplication.shared.showNetworkLoader(messageText: "Signing you In")
 
         // Sign In
-        viewModel!.signIn(userEmail: userEmailTextField.text!, password: pwdTextField.text!) { (user: FIRUser?, error: Error?) in
+        viewModel!.signIn(userEmail: email, password: pwd) { (user: FIRUser?, error: Error?) in
             UIApplication.shared.hideNetworkLoader()
             if let err = error {
                 print("Error Info: \(err.localizedDescription)")
@@ -198,7 +249,7 @@ class SignInSignUpViewController: UIViewController {
                     self.performSegue(withIdentifier: SegueConstants.groupListSegue, sender: self)
                 }
                 else {
-                    let alertView = OpinionzAlertView(title: "Email is not verified", message: "Please accept the verification mail that has been sent to your email id: \(self.userEmailTextField.text!). Please verify your mail before proceeding. If you didn't recieve the mail, please send it again.", cancelButtonTitle: "Cancel", otherButtonTitles: ["Send Again"], usingBlockWhenTapButton: { (alertView, index) in
+                    let alertView = OpinionzAlertView(title: "Email is not verified", message: "Please accept the verification mail that has been sent to your email id: \(email). Please verify your mail before proceeding. If you didn't recieve the mail, please send it again.", cancelButtonTitle: "Cancel", otherButtonTitles: ["Send Again"], usingBlockWhenTapButton: { (alertView, index) in
                         
                         self.viewModel?.resendVerificationMail(completionHandler: { error in
                             guard let _ = error else {
@@ -211,27 +262,17 @@ class SignInSignUpViewController: UIViewController {
                     })
                     alertView?.iconType = OpinionzAlertIconWarning
                     alertView?.show()
-//                    
-//                    self.showAlert(title: "Email is not verified", message: "Please accept the verification mail that has been sent to your email id: \(self.userEmailTextField.text!). Please verify your mail before proceeding. If you didn't recieve the mail, please send it again.", action: [UIAlertAction(title: "Send Again", style: .default, handler: { action in
-//                        self.viewModel?.resendVerificationMail(completionHandler: { error in
-//                            guard let _ = error else {
-//                                self.showAlert(title: "Unable to send Verification Mail", message: "We are unable to send the verification mail to your email id, please try again later", action: [UIAlertAction(title: "Ok", style: .default, handler: nil)])
-//                                return
-//                            }
-//                            self.showAlert(title: "Verification mail sent", message: "Please check your mail and verify your mail address and try to sign in", action: [UIAlertAction(title: "Ok", style: .default, handler: nil)])
-//                        })
-//                    }), UIAlertAction(title: "Ok", style: .default, handler: nil)])
                 }
             }
         }
     }
-    private func signUp() {
-
+    private func signUp(UserName uName: String, EmailID email: String, Password pwd: String) {
+        view.endEditing(true)
         // Sign Up
         // Creating the User using Email & Password
         UIApplication.shared.showNetworkLoader(messageText: "Signing Up")
 
-        viewModel!.signUp(userName: userNameTextField.text!, userEmail: userEmailTextField.text!, password: retypePwdTextField.text!, userImage: btnPhoto.imageView?.image, completionHandler: { (user: FIRUser?, error: Error?) in
+        viewModel!.signUp(userName: uName, userEmail: email, password: pwd, userImage: btnPhoto.imageView?.image, completionHandler: { (user: FIRUser?, error: Error?) in
             UIApplication.shared.hideNetworkLoader()
             if let err = error {
                 print("Error Info: \(err.localizedDescription)")
@@ -243,7 +284,7 @@ class SignInSignUpViewController: UIViewController {
                 self.showAlert(title: "Verification mail sent", message: "Please check your mail and verify your mail address and try to sign in", alertBGColor: .green)
                 
                 // Now revert back to Sign In UI
-                self.toggleSignInSignUp(sender: self.btnSignInSignUp)
+                self.changeMode(sender: self.btnSignInSignUp)
             }
         })
     }
@@ -310,20 +351,25 @@ extension SignInSignUpViewController: UIImagePickerControllerDelegate, UINavigat
 }
 // MARK: - Keyboard Listeners
 extension SignInSignUpViewController {
-    func keyboardWillShow(notification: NSNotification) {
-        if let keyboardRect = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if blurViewTopConstraint.constant == 0{
-                blurViewTopConstraint.constant -= (50)
-            }
-        }
-        UIView.animate(withDuration: 0.5, animations: {
-            self.view.layoutIfNeeded()
-        })
-    }
-    func keyboardWillHide(notification: NSNotification) {
+    func keyboardHandler(notification: NSNotification) {
         if let _ = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if blurViewTopConstraint.constant != 0{
-                blurViewTopConstraint.constant = 0
+            switch currentMode {
+            case .SignIn:
+                if signInBlurViewYConstraint.constant == 0 {
+                    signInBlurViewYConstraint.constant -= 100.0
+                }
+                else {
+                    signInBlurViewYConstraint.constant = 0.0
+                }
+                break
+            case .SignUp:
+                if signUpBlurViewYConstraint.constant == 10 {
+                    signUpBlurViewYConstraint.constant -= 100.0
+                }
+                else {
+                    signUpBlurViewYConstraint.constant = 10.0
+                }
+                break
             }
         }
         UIView.animate(withDuration: 0.5, animations: {
@@ -336,61 +382,30 @@ extension SignInSignUpViewController {
 extension SignInSignUpViewController: UITextFieldDelegate {
     
     // MARK: Email checker
-    private func isValidEmail(testStr:String) -> Bool {
+    func isValidEmail(testStr:String) -> Bool {
         // print("validate calendar: \(testStr)")
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
         
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         return emailTest.evaluate(with: testStr)
     }
-    
-    // MARK: Delegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        switch textField.tag {
-        case 1:
-            guard let text = textField.text, !text.isEmpty else {
-                textField.shake()
-                textField.becomeFirstResponder()
-                return true
+        if currentMode == .SignIn {
+            if textField == signInUserEmailTextField {
+                signInPwdTextField.becomeFirstResponder()
             }
-            userEmailTextField.becomeFirstResponder()
-            break
-        case 2:
-            guard let text = textField.text, !text.isEmpty, isValidEmail(testStr: text) else {
-                textField.shake()
-                textField.becomeFirstResponder()
-                return true
+        }
+        else {
+            if textField == userNameTextField {
+                signUpUserEmailTextField.becomeFirstResponder()
             }
-            pwdTextField.becomeFirstResponder()
-            break
-        case 3:
-            guard let text = textField.text, !text.isEmpty, text.characters.count >= 6 else {
-                textField.shake()
-                textField.becomeFirstResponder()
-                return true
+            else if textField == signUpUserEmailTextField {
+                signUpPwdTextField.becomeFirstResponder()
             }
-            // For SignUp Process
-            if btnSignInSignUp.tag == 2 {
-                // show the retype password textfield
+            else if textField == signUpPwdTextField {
                 retypePwdTextField.becomeFirstResponder()
             }
-            else {
-                // Sign In
-                signInSignUp()
-            }
-            break
-        case 4:
-            guard let text = textField.text, !text.isEmpty, text == pwdTextField.text else {
-                textField.shake()
-                textField.becomeFirstResponder()
-                return true
-            }
-            // Sign Up
-            signInSignUp()
-            
-            break
-        default: break
         }
         return true
     }

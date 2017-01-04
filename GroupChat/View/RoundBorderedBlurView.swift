@@ -1,5 +1,5 @@
 //
-//  RoundBorderedButton.swift
+//  RoundBorderedBlurView.swift
 //  GroupChat
 //
 //  Created by Soham Bhattacharjee on 30/12/16.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RoundBorderedButton: UIButton {
+class RoundBorderedBlurView: UIVisualEffectView {
 
     /*
     // Only override draw() if you perform custom drawing.
@@ -19,9 +19,7 @@ class RoundBorderedButton: UIButton {
     */
     override func awakeFromNib() {
         super.awakeFromNib()
-        layer.cornerRadius = frame.size.height / 2
-        layer.borderColor = ColorConstants.baseColor.cgColor
-        layer.borderWidth = 1.0
+        layer.cornerRadius = 5.0
         layer.masksToBounds = true
     }
 
