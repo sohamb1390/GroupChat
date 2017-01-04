@@ -73,6 +73,7 @@ PODS:
   - GoogleToolboxForMac/NSString+URLArguments (2.1.0)
   - GTMSessionFetcher/Core (1.1.7)
   - JDropDownAlert (1.0.2)
+  - JJMaterialTextField (0.1.3)
   - JSQMessagesViewController (7.3.4):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
@@ -90,6 +91,7 @@ DEPENDENCIES:
   - Firebase/Storage
   - FTIndicator
   - JDropDownAlert
+  - JJMaterialTextField
   - JSQMessagesViewController
   - OpinionzAlertView
   - RxCocoa (~> 3.0)
@@ -111,12 +113,13 @@ SPEC CHECKSUMS:
   GoogleToolboxForMac: 2b2596cbb7186865e98cadf2b1e262d851c2b168
   GTMSessionFetcher: a1f8ed39e4fe21c68957daed472c7afbcdf29166
   JDropDownAlert: ae5f11d1fafa97313d745ef84556ae8a35c86bd0
+  JJMaterialTextField: 1ae240b5d75966dd0c2acc9f59d1be6f4e83e0e5
   JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   OpinionzAlertView: 213cf7fa544091962ebd9526ff2e7e120b13c149
   RxCocoa: 15a52fc590dcc700cb4a690a633b5c5184ce3a78
   RxSwift: af5680055c4ad04480189c52d28385b1029493a6
 
-PODFILE CHECKSUM: ce80332d8f86b19089087839b62f59355cbdda80
+PODFILE CHECKSUM: fc94696a6e19a53452d770ae015540fba70816a7
 
 COCOAPODS: 1.1.1

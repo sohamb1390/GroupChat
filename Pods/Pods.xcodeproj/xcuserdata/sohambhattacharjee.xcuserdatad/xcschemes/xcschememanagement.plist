@@ -24,6 +24,16 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>JJMaterialTextField-JJMaterialTextField.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>JJMaterialTextField.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>JSQMessagesViewController.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -72,12 +82,17 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>436A874D3E1027A6491D67DB30DB1B17</key>
+		<key>088AC29759276D60E3F3B6D2A7980B61</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>680CF0156E38A1187D525C731287488D</key>
+		<key>171892E643977CACF1C966931DF0970F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>436A874D3E1027A6491D67DB30DB1B17</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -97,6 +112,16 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>7A99D5371E3E2007944856A268C88672</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>9B6272087EC1AC06B138868BB6C33B15</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>A57D69BCA10D0E09DCABD63F16C9C0C2</key>
 		<dict>
 			<key>primary</key>
@@ -112,7 +137,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C1CAC807EB20C73CB3588DF4A458B99F</key>
+		<key>C366E9E23E09640A4037C2DB020E88A2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -128,11 +153,6 @@
 			<true/>
 		</dict>
 		<key>D0581AF7BF4A6DA140D280B19ECC7BFF</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>E6FF129722AED97F891F8094DB5D5C8F</key>
 		<dict>
 			<key>primary</key>
 			<true/>

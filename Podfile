@@ -18,6 +18,7 @@ target 'GroupChat' do
   pod 'FTIndicator'
   pod 'JDropDownAlert'
   pod 'OpinionzAlertView'
+  pod 'JJMaterialTextField'
   target 'GroupChatTests' do
     inherit! :search_paths
     # Pods for testing

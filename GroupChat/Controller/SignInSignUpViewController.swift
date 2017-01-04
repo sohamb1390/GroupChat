@@ -13,6 +13,7 @@ import RxSwift
 import RxCocoa
 import MobileCoreServices
 import OpinionzAlertView
+import JJMaterialTextField
 
 class SignInSignUpViewController: UIViewController {
     
@@ -21,11 +22,14 @@ class SignInSignUpViewController: UIViewController {
     @IBOutlet weak var btnSignInSignUp: UIButton!
     @IBOutlet weak var btnPhoto: UIButton!
     
-    @IBOutlet weak var userEmailTextField: UITextField! {
+    @IBOutlet weak var userEmailTextField: JJMaterialTextfield! {
         didSet {
             userEmailTextField.returnKeyType = .next
             userEmailTextField.keyboardType = .emailAddress
             userEmailTextField.delegate = self
+            userEmailTextField.adjustsFontForContentSizeCategory = true
+            userEmailTextField.attributedPlaceholder = NSAttributedString(string: "Email ID",
+                                                                   attributes: [NSForegroundColorAttributeName: UIColor.white])
         }
     }
     @IBOutlet weak var userNameTextField: UITextField! {
@@ -35,14 +39,14 @@ class SignInSignUpViewController: UIViewController {
             userNameTextField.delegate = self
         }
     }
-    @IBOutlet weak var pwdTextField: UITextField! {
+    @IBOutlet weak var pwdTextField: JJMaterialTextfield! {
         didSet {
             pwdTextField.isSecureTextEntry = true
             pwdTextField.returnKeyType = .next
             pwdTextField.delegate = self
         }
     }
-    @IBOutlet weak var retypePwdTextField: UITextField! {
+    @IBOutlet weak var retypePwdTextField: JJMaterialTextfield! {
         didSet {
             retypePwdTextField.isSecureTextEntry = true
             retypePwdTextField.returnKeyType = .next
@@ -53,7 +57,7 @@ class SignInSignUpViewController: UIViewController {
     @IBOutlet weak var topConstraintPasswordField: NSLayoutConstraint!
     @IBOutlet weak var topConstraintEmailField: NSLayoutConstraint!
     @IBOutlet weak var buttonTopConstraint: NSLayoutConstraint!
-    
+    @IBOutlet weak var blurViewTopConstraint: NSLayoutConstraint!
     // MARK: Variables
     var viewModel: GroupChatViewModel?
     
@@ -63,7 +67,7 @@ class SignInSignUpViewController: UIViewController {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
-        navigationController?.isNavigationBarHidden = false
+        navigationController?.isNavigationBarHidden = true
         navigationItem.hidesBackButton = true
         
         // Initialise View Model
@@ -307,18 +311,24 @@ extension SignInSignUpViewController: UIImagePickerControllerDelegate, UINavigat
 // MARK: - Keyboard Listeners
 extension SignInSignUpViewController {
     func keyboardWillShow(notification: NSNotification) {
-        if let _ = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0{
-                self.view.frame.origin.y -= buttonTopConstraint.constant
+        if let keyboardRect = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if blurViewTopConstraint.constant == 0{
+                blurViewTopConstraint.constant -= (50)
             }
         }
+        UIView.animate(withDuration: 0.5, animations: {
+            self.view.layoutIfNeeded()
+        })
     }
     func keyboardWillHide(notification: NSNotification) {
         if let _ = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y != 0{
-                self.view.frame.origin.y = 0
+            if blurViewTopConstraint.constant != 0{
+                blurViewTopConstraint.constant = 0
             }
         }
+        UIView.animate(withDuration: 0.5, animations: {
+            self.view.layoutIfNeeded()
+        })
     }
 }
 
