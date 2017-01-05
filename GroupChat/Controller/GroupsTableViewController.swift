@@ -9,6 +9,7 @@
 import UIKit
 import JSQMessagesViewController
 import OpinionzAlertView
+import SwiftMessages
 
 class GroupsTableViewController: UITableViewController {
     
@@ -50,7 +51,7 @@ class GroupsTableViewController: UITableViewController {
         viewModel.signOut { error in
             if error != nil {
                 print ("Error signing out: %@", error!)
-                self.showAlert(title: "Unable to sign out", message: error!.localizedDescription, alertBGColor: .red)
+                self.showAlert(title: "Unable to sign out", message: error!.localizedDescription, notiType: .error)
             }
             else {
                 self.popToSignInSignOutScreen()
@@ -86,7 +87,7 @@ class GroupsTableViewController: UITableViewController {
             let passwordTextField = alertController.textFields![0] as UITextField
             guard let password = passwordTextField.text, !password.isEmpty else {
                 print("Password is blank")
-                self.showAlert(title: "Password cannot be empty", message: "Please provide a valid password", alertBGColor: .red)
+                self.showAlert(title: "Password cannot be empty", message: "Please provide a valid password", notiType: .error)
                 return
             }
             if password == grpModel.groupPassword  {
@@ -96,7 +97,7 @@ class GroupsTableViewController: UITableViewController {
             }
             else {
                 print("Password didn't match")
-                self.showAlert(title: "Invalid Password", message: "Please provide a valid password", alertBGColor: .red)
+                self.showAlert(title: "Invalid Password", message: "Please provide a valid password", notiType: .error)
             }
         })
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: {
@@ -184,7 +185,7 @@ extension GroupsTableViewController {
             OperationQueue.main.addOperation({
                 UIApplication.shared.hideNetworkLoader()
                 if error != nil {
-                    self.showAlert(title: "Unable to fetch your groups", message: "Some unknown error occured, please try again later", alertBGColor: .red)
+                    self.showAlert(title: "Unable to fetch your groups", message: "Some unknown error occured, please try again later", notiType: .error)
                 }
                 else {
                     let postDictArray = snapshot!.value as? [String : AnyObject] ?? [:]

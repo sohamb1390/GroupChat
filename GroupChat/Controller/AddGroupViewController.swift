@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import FirebaseDatabase
+import SwiftMessages
 
 @objc protocol AddGroupDelegate {
     func loadUpdatedGroups()
@@ -111,13 +112,13 @@ extension AddGroupViewController {
             // Firebase reference found, now do the next checkings
             if doesExist {
                 UIApplication.shared.hideNetworkLoader()
-                self.showAlert(title: "Unable to add your group", message: "Group name already exists", alertBGColor: .red)
+                self.showAlert(title: "Unable to add your group", message: "Group name already exists", notiType: .error)
             }
             else {
                 self.viewModel.addGroup(groupChildName: "Groups", groupName: self.groupNameTextField.text!, password: self.retypePwdTextField.text!, completionHandler: { (groupID, error) in
                     UIApplication.shared.hideNetworkLoader()
                     if let err = error {
-                        self.showAlert(title: "Unable to add your group", message: FirebaseError.getErrorDesc(error: err), alertBGColor: .red)
+                        self.showAlert(title: "Unable to add your group", message: FirebaseError.getErrorDesc(error: err), notiType: .error)
                     }
                     else {
                         self.dismiss(animated: true, completion: {

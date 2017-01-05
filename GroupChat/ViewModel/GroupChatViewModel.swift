@@ -58,6 +58,8 @@ class GroupChatViewModel {
     
     required init() {
         ref = FIRDatabase.database().reference()
+        ref!.keepSynced(true)
+        
         firebaseAuth = FIRAuth.auth()
         currentUser = firebaseAuth?.currentUser
         storageReference = FIRStorage.storage().reference(forURL: URLConstants.storageURL)

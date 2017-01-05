@@ -9,7 +9,8 @@
 import Foundation
 import UIKit
 import KRProgressHUD
-import JDropDownAlert
+import SwiftMessages
+
 extension UIView {
     func shake() {
         let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
@@ -20,21 +21,29 @@ extension UIView {
     }
 }
 extension UIViewController {
-    func showAlert(title: String, message: String, alertBGColor: UIColor) {
-        let alert = JDropDownAlert(position: .top, direction: .normal)
-        alert.alertWith(title, message: message, topLabelColor: .white, messageLabelColor: .white, backgroundColor: alertBGColor)
-        alert.didTapBlock = {
-        }
+    func showAlert(title: String, message: String, notiType: Theme) {
+        let errorView = MessageView.viewFromNib(layout: .CardView)
+        errorView.configureTheme(notiType)
+        // Set message title, body, and icon. Here, we're overriding the default warning
+        errorView.configureContent(title: title, body: message)
+        
+        // Hide the button
+        errorView.button?.isHidden = true
+        
+        // Add a drop shadow.
+        errorView.configureDropShadow()
+        SwiftMessages.show(view: errorView)
     }
     func popToSignInSignOutScreen() {
         let controllersArray = navigationController?.viewControllers
         for controller in controllersArray! {
             if controller.isKind(of: SignInSignUpViewController.classForCoder()) {
-               _ = navigationController?.popToViewController(controller, animated: true)
+                _ = navigationController?.popToViewController(controller, animated: true)
             }
         }
     }
 }
+
 extension UIApplication {
     func showNetworkLoader(messageText: String) {
         isNetworkActivityIndicatorVisible = true
@@ -73,10 +82,10 @@ extension UIDevice {
     }
 }
 extension UIImage {
-//    func crop(toWidth: CGFloat, toHeight: CGFloat) -> UIImage? {
-//        let toHeight = size.height / size.width * toWidth
-//        return crop(toWidth: toWidth, toHeight: toHeight)
-//    }
+    //    func crop(toWidth: CGFloat, toHeight: CGFloat) -> UIImage? {
+    //        let toHeight = size.height / size.width * toWidth
+    //        return crop(toWidth: toWidth, toHeight: toHeight)
+    //    }
     /// Returns a image that fills in newSize
     func resizedImage(newSize: CGSize) -> UIImage {
         // Guard newSize is different

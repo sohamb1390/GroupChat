@@ -13,6 +13,7 @@ import RxCocoa
 import MobileCoreServices
 import OpinionzAlertView
 import JJMaterialTextField
+import SwiftMessages
 
 enum Mode: String {
     case SignIn = "SignIn", SignUp = "SignUp"
@@ -244,7 +245,7 @@ class SignInSignUpViewController: UIViewController {
             if let err = error {
                 print("Error Info: \(err.localizedDescription)")
                 let errorDesc = FirebaseError.getErrorDesc(error: err)
-                self.showAlert(title: "Unable to Sign In", message: errorDesc, alertBGColor: .red)
+                self.showAlert(title: "Unable to Sign In", message: errorDesc, notiType: .error)
 
             }
             else {
@@ -259,10 +260,10 @@ class SignInSignUpViewController: UIViewController {
                         
                         self.viewModel?.resendVerificationMail(completionHandler: { error in
                             guard let _ = error else {
-                                self.showAlert(title: "Unable to send Verification Mail", message: "We are unable to send the verification mail to your email id, please try again later", alertBGColor: .red)
+                                self.showAlert(title: "Unable to send Verification Mail", message: "We are unable to send the verification mail to your email id, please try again later", notiType: .error)
                                 return
                             }
-                            self.showAlert(title: "Verification mail sent", message: "Please check your mail and verify your mail address and try to sign in", alertBGColor: .green)
+                            self.showAlert(title: "Verification mail sent", message: "Please check your mail and verify your mail address and try to sign in", notiType: .success)
                         })
                         
                     })
@@ -283,11 +284,11 @@ class SignInSignUpViewController: UIViewController {
             if let err = error {
                 print("Error Info: \(err.localizedDescription)")
                 let errorDesc = FirebaseError.getErrorDesc(error: err)
-                self.showAlert(title: "Unable to Sign Up", message: errorDesc, alertBGColor: .red)
+                self.showAlert(title: "Unable to Sign Up", message: errorDesc, notiType: .error)
             }
             else {
                 print("User Info: \(user.debugDescription)")
-                self.showAlert(title: "Verification mail sent", message: "Please check your mail and verify your mail address and try to sign in", alertBGColor: .green)
+                self.showAlert(title: "Verification mail sent", message: "Please check your mail and verify your mail address and try to sign in", notiType: .success)
                 
                 // Now revert back to Sign In UI
                 self.changeMode(sender: self.btnSignInSignUp)

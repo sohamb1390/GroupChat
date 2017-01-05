@@ -16,7 +16,7 @@ target 'GroupChat' do
   pod 'RxCocoa',    '~> 3.0'
   pod 'JSQMessagesViewController'
   pod 'KRProgressHUD'
-  pod 'JDropDownAlert'
+  pod 'SwiftMessages'
   pod 'OpinionzAlertView'
   pod 'JJMaterialTextField'
   target 'GroupChatTests' do

@@ -25,7 +25,7 @@ class ChatViewController: JSQMessagesViewController {
         }
     }
     private lazy var messageRef: FIRDatabaseReference = {
-        return self.getMessage()
+        return self.getMessageRefrence()
     }()
     private var newMessageRefHandle: FIRDatabaseHandle?
     private lazy var cache: NSCache<AnyObject, AnyObject> = {
@@ -66,6 +66,9 @@ class ChatViewController: JSQMessagesViewController {
         else {
             title = senderDisplayName
         }
+        
+        // automatically scrolls down if new message came
+        automaticallyScrollsToMostRecentMessage = true
         
         // Customise UI
         customiseUI()
@@ -165,8 +168,10 @@ class ChatViewController: JSQMessagesViewController {
     }
     
     // MARK: - Chat Controls
-    private func getMessage() -> FIRDatabaseReference {
-        return viewModel.ref!.child("Chat").child(groupID!)
+    private func getMessageRefrence() -> FIRDatabaseReference {
+        let messageRef = viewModel.ref!.child("Chat").child(groupID!)
+        messageRef.keepSynced(true)
+        return messageRef
     }
     private func getRef() -> FIRDatabaseReference {
         return viewModel.ref!
@@ -193,18 +198,20 @@ class ChatViewController: JSQMessagesViewController {
         }
     }
     private func removeMessage(DeletedChatId deletedChatSenderId: String) {
-        let deletedChatMessages = messages.filter { message -> Bool in
-            return message.senderId == deletedChatSenderId
+        var tempChatMessages = messages
+        for (index, message) in tempChatMessages.enumerated() {
+            if message.senderId == deletedChatSenderId {
+                tempChatMessages.remove(at: index)
+            }
         }
-        messages = deletedChatMessages
+        messages = tempChatMessages
     }
 
     override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
         
         // Create a chat
-        //let imageData = UIImageJPEGRepresentation(UIImage(named: "image")!, 0.8)! as Data
         isTyping = false
-        viewModel.createChat(groupID: groupID!, chatChildName: "Chat", senderName: senderDisplayName, mediaName: nil, chatMessage: text, chatDateTime: date, mediaType: .Text, mediaData: nil, completionHandler: { (error) in
+        viewModel.createChat(groupID: groupID!, chatChildName: "Chat", senderName: senderDisplayName, mediaName: nil, chatMessage: text, chatDateTime: date!, mediaType: .Text, mediaData: nil, completionHandler: { (error) in
             self.finishSendingMessage()
         })
         JSQSystemSoundPlayer.jsq_playMessageSentSound() // 4
