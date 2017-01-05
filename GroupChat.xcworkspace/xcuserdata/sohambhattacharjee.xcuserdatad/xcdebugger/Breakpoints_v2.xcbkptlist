@@ -29,11 +29,11 @@
             moduleName = "">
             <Locations>
                <Location
-                  shouldBeEnabled = "Yes"
+                  shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "GroupChat.AddGroupViewController.addGroup () -&gt; ()"
-                  moduleName = "GroupChat"
+                  symbolName = "UIViewAlertForUnsatisfiableConstraints"
+                  moduleName = "UIKit"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/sohambhattacharjee/Documents/Work/Personal%20Stuffs/SourceTree-Repo/GroupChat-Firebase/GroupChat/Controller/AddGroupViewController.swift"
                   timestampString = "505151970.47767"
@@ -47,8 +47,8 @@
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "UIViewAlertForUnsatisfiableConstraints"
-                  moduleName = "UIKit"
+                  symbolName = "GroupChat.AddGroupViewController.(addGroup () -&gt; ()).(closure #1)"
+                  moduleName = "GroupChat"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/sohambhattacharjee/Documents/Work/Personal%20Stuffs/SourceTree-Repo/GroupChat-Firebase/GroupChat/Controller/AddGroupViewController.swift"
                   timestampString = "505151970.479637"
