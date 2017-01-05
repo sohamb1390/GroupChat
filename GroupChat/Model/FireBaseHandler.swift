@@ -36,6 +36,19 @@ class FireBaseHandler: NSObject {
             completionHandler(error)
         }
     }
+    
+    // MARK: Online/Offline capabilities
+    class func getUserStatusNetworkStatus(database: FIRDatabase) {
+        let connectedRef = database.reference(withPath: ".info/connected")
+        connectedRef.observe(.value, with: { snapshot in
+            if let connected = snapshot.value as? Bool, connected {
+                print("Connected")
+            } else {
+                print("Not connected")
+            }
+        })
+    }
+    
     // MARK: - Create, Delete, Modify Chat
     
     // MARK: Create a new chat

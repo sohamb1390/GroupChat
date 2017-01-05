@@ -34,6 +34,7 @@ class GroupsTableViewController: UITableViewController {
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -182,8 +183,8 @@ extension GroupsTableViewController {
         UIApplication.shared.showNetworkLoader(messageText: "Fetching your groups")
         
         viewModel.loadGroups(groupChildName: "Groups") { (snapshot, error) in
+            UIApplication.shared.hideNetworkLoader()
             OperationQueue.main.addOperation({
-                UIApplication.shared.hideNetworkLoader()
                 if error != nil {
                     self.showAlert(title: "Unable to fetch your groups", message: "Some unknown error occured, please try again later", notiType: .error)
                 }
@@ -193,7 +194,9 @@ extension GroupsTableViewController {
                         // No groups found
                         // Add atleast one group to continue
                         let alertView = OpinionzAlertView(title: "No groups found", message: "Please add atleast one group to continue", cancelButtonTitle: "Cancel", otherButtonTitles: ["Add one group"], usingBlockWhenTapButton: { (alertView, index) in
-                            self.performSegue(withIdentifier: SegueConstants.addGroupScreenSegue, sender: self)
+                            if index == 1 {
+                                self.performSegue(withIdentifier: SegueConstants.addGroupScreenSegue, sender: self)
+                            }
                         })
                         alertView?.iconType = OpinionzAlertIconWarning
                         alertView?.show()

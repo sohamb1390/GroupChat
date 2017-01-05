@@ -46,6 +46,7 @@ class GroupChatViewModel {
     var ref: FIRDatabaseReference?
     var currentUser: FIRUser?
     var firebaseAuth: FIRAuth?
+    var fireDatabase: FIRDatabase?
     var storageReference: FIRStorageReference?
     
     // Singleton
@@ -58,6 +59,10 @@ class GroupChatViewModel {
     
     required init() {
         ref = FIRDatabase.database().reference()
+        
+        // Offline capabilities
+        fireDatabase = FIRDatabase.database()
+        fireDatabase!.persistenceEnabled = true
         ref!.keepSynced(true)
         
         firebaseAuth = FIRAuth.auth()

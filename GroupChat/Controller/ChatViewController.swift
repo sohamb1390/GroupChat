@@ -131,7 +131,7 @@ class ChatViewController: JSQMessagesViewController {
                 self.addMessage(withId: id, name: name, text: text, dateTimeString: dateTime)
                 
                 // 5
-                self.finishReceivingMessage()
+                self.finishReceivingMessage(animated: true)
             } else {
                 print("Error! Could not decode message data")
             }
@@ -192,9 +192,15 @@ class ChatViewController: JSQMessagesViewController {
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .medium
         let dateTime = dateFormatter.date(from: dateTimeString)
-        
-        if let message = JSQMessage(senderId: id, senderDisplayName: name, date: dateTime, text: text) {
-            messages.append(message)
+        if dateTime == nil {
+            if let message = JSQMessage.init(senderId: id, displayName: name, text: text) {
+                messages.append(message)
+            }
+        }
+        else {
+            if let message = JSQMessage(senderId: id, senderDisplayName: name, date: dateTime, text: text) {
+                messages.append(message)
+            }
         }
     }
     private func removeMessage(DeletedChatId deletedChatSenderId: String) {
@@ -212,7 +218,7 @@ class ChatViewController: JSQMessagesViewController {
         // Create a chat
         isTyping = false
         viewModel.createChat(groupID: groupID!, chatChildName: "Chat", senderName: senderDisplayName, mediaName: nil, chatMessage: text, chatDateTime: date!, mediaType: .Text, mediaData: nil, completionHandler: { (error) in
-            self.finishSendingMessage()
+            self.finishSendingMessage(animated: true)
         })
         JSQSystemSoundPlayer.jsq_playMessageSentSound() // 4
     }
