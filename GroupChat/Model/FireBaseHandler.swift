@@ -36,7 +36,9 @@ class FireBaseHandler: NSObject {
             completionHandler(error)
         }
     }
-    // MARK: Create Chat
+    // MARK: - Create, Delete, Modify Chat
+    
+    // MARK: Create a new chat
     class func createChat(ref: FIRDatabaseReference, storageRef: FIRStorageReference, chatChildName: String, chatData: Chat, mediaName: String?, groupID: String, completionHandler: @escaping(_ error: Error?) -> Void) {
         
         // Convert Chat Data into detail description
@@ -80,23 +82,33 @@ class FireBaseHandler: NSObject {
                     riversRef.put(mediaData!, metadata: nil) { (metadata, error) in
                         guard let metadata = metadata else {
                             // Uh-oh, an error occurred!
+                            completionHandler(error)
                             return
                         }
                         // Metadata contains file metadata such as size, content-type, and download URL.
-                        let downloadURL = metadata.downloadURL()
-                        
-                        // Update the existing Chat
-                        ref.child(chatChildName).child(groupID).child(databaseRef.key).runTransactionBlock({ (result) -> FIRTransactionResult in
-                            // Update the chat media URL
-                            if let resultValue = result.value {
-                                print(resultValue)
-                            }
-                            
-                            return FIRTransactionResult.success(withValue: result)
-                        }, andCompletionBlock: { (error, isUpdated, snapshot) in
-                            
-                        })
+                        if let downloadURL = metadata.downloadURL() {
+                            // Update the existing Chat
+                            ref.child(chatChildName).child(groupID).child(databaseRef.key).observe(.value, with: { (snapshot) in
+                                if var dict = snapshot.value as? [String: Any] {
+                                    dict["mediaURL"] = downloadURL.absoluteString
+                                    ref.child(chatChildName).child(groupID).child(databaseRef.key).setValue(dict)
+                                    completionHandler(nil)
+                                }
+                                else {
+                                    completionHandler(error)
+                                }
+                            }, withCancel: { (error) in
+                                print(error)
+                                completionHandler(error)
+                            })
+                        }
+                        else {
+                            completionHandler(error)
+                        }
                     }
+                }
+                else {
+                    completionHandler(error)
                 }
             }
         }
