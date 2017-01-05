@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		442BCFD81E1BE44700ED0B26 /* image.png in Resources */ = {isa = PBXBuildFile; fileRef = 442BCFD71E1BE44700ED0B26 /* image.png */; };
 		4473D0561E1B60BB0060EAE4 /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4473D0551E1B60BB0060EAE4 /* NetworkHandler.swift */; };
+		449E6BBA1E1E2B74001F16C1 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449E6BB91E1E2B74001F16C1 /* ChatViewController.swift */; };
 		44A806EF1E10EC3D00B5924E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A806EE1E10EC3D00B5924E /* AppDelegate.swift */; };
-		44A806F11E10EC3D00B5924E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A806F01E10EC3D00B5924E /* ViewController.swift */; };
 		44A806F41E10EC3D00B5924E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44A806F21E10EC3D00B5924E /* Main.storyboard */; };
 		44A806F61E10EC3D00B5924E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44A806F51E10EC3D00B5924E /* Assets.xcassets */; };
 		44A806F91E10EC3D00B5924E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44A806F71E10EC3D00B5924E /* LaunchScreen.storyboard */; };
@@ -54,9 +54,9 @@
 		441943C91E124E030084F886 /* GroupChat-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GroupChat-Bridging-Header.h"; sourceTree = "<group>"; };
 		442BCFD71E1BE44700ED0B26 /* image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image.png; sourceTree = "<group>"; };
 		4473D0551E1B60BB0060EAE4 /* NetworkHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkHandler.swift; sourceTree = "<group>"; };
+		449E6BB91E1E2B74001F16C1 /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		44A806EB1E10EC3D00B5924E /* GroupChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GroupChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		44A806EE1E10EC3D00B5924E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		44A806F01E10EC3D00B5924E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		44A806F31E10EC3D00B5924E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		44A806F51E10EC3D00B5924E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		44A806F81E10EC3D00B5924E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -148,7 +148,6 @@
 				44A8071D1E10EDC000B5924E /* Model */,
 				44A8071E1E10EDC000B5924E /* View */,
 				44A806EE1E10EC3D00B5924E /* AppDelegate.swift */,
-				44A806F01E10EC3D00B5924E /* ViewController.swift */,
 				44A806F21E10EC3D00B5924E /* Main.storyboard */,
 				44A807251E10EF8D00B5924E /* AddGroup.storyboard */,
 				44A806F51E10EC3D00B5924E /* Assets.xcassets */,
@@ -179,6 +178,7 @@
 		44A8071C1E10EDC000B5924E /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				449E6BB91E1E2B74001F16C1 /* ChatViewController.swift */,
 				44A807211E10EF5300B5924E /* GroupsTableViewController.swift */,
 				44A807231E10EF6C00B5924E /* AddGroupViewController.swift */,
 				44A8072C1E111D8D00B5924E /* SignInSignUpViewController.swift */,
@@ -321,6 +321,7 @@
 				TargetAttributes = {
 					44A806EA1E10EC3D00B5924E = {
 						CreatedOnToolsVersion = 8.1;
+						DevelopmentTeam = 2T4GPBYKK8;
 						ProvisioningStyle = Manual;
 					};
 					44A806FE1E10EC3D00B5924E = {
@@ -532,10 +533,10 @@
 			files = (
 				44D5A8ED1E151FC700F070B2 /* GroupChatConstants.swift in Sources */,
 				4473D0561E1B60BB0060EAE4 /* NetworkHandler.swift in Sources */,
+				449E6BBA1E1E2B74001F16C1 /* ChatViewController.swift in Sources */,
 				44ADAFD21E166FEF00278F30 /* RoundBorderedBlurView.swift in Sources */,
 				44D5A8F01E15200B00F070B2 /* GroupChatViewModel.swift in Sources */,
 				44A807221E10EF5300B5924E /* GroupsTableViewController.swift in Sources */,
-				44A806F11E10EC3D00B5924E /* ViewController.swift in Sources */,
 				44A806EF1E10EC3D00B5924E /* AppDelegate.swift in Sources */,
 				44A8072D1E111D8D00B5924E /* SignInSignUpViewController.swift in Sources */,
 				44D5A8EE1E151FC700F070B2 /* GroupChatExtension.swift in Sources */,
@@ -691,11 +692,14 @@
 			baseConfigurationReference = 59588D69D50898CCB003EAD6 /* Pods-GroupChat.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Soham Bhattacharjee (Q32T8QSE7N)";
+				DEVELOPMENT_TEAM = 2T4GPBYKK8;
 				INFOPLIST_FILE = GroupChat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.soham.GroupChat;
+				PRODUCT_BUNDLE_IDENTIFIER = com.foodlion.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "744aa24a-7360-4704-8e9a-7badcdcfb112";
+				PROVISIONING_PROFILE_SPECIFIER = WildcardFoodLion;
 				SWIFT_OBJC_BRIDGING_HEADER = "GroupChat-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
@@ -706,11 +710,15 @@
 			baseConfigurationReference = 68752CC1A1021E5A3DEB70C3 /* Pods-GroupChat.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Soham Bhattacharjee (Q32T8QSE7N)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Soham Bhattacharjee (Q32T8QSE7N)";
+				DEVELOPMENT_TEAM = 2T4GPBYKK8;
 				INFOPLIST_FILE = GroupChat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.soham.GroupChat;
+				PRODUCT_BUNDLE_IDENTIFIER = com.foodlion.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "744aa24a-7360-4704-8e9a-7badcdcfb112";
+				PROVISIONING_PROFILE_SPECIFIER = WildcardFoodLion;
 				SWIFT_OBJC_BRIDGING_HEADER = "GroupChat-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};

@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import FTIndicator
+import KRProgressHUD
 import JDropDownAlert
 extension UIView {
     func shake() {
@@ -24,13 +24,7 @@ extension UIViewController {
         let alert = JDropDownAlert(position: .top, direction: .normal)
         alert.alertWith(title, message: message, topLabelColor: .white, messageLabelColor: .white, backgroundColor: alertBGColor)
         alert.didTapBlock = {
-            
         }
-//        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-//        for actionItem in action {
-//            alertController.addAction(actionItem)
-//        }
-//        self.present(alertController, animated: true, completion: nil)
     }
     func popToSignInSignOutScreen() {
         let controllersArray = navigationController?.viewControllers
@@ -44,12 +38,10 @@ extension UIViewController {
 extension UIApplication {
     func showNetworkLoader(messageText: String) {
         isNetworkActivityIndicatorVisible = true
-        
-        FTIndicator.showProgressWithmessage(messageText, userInteractionEnable: true)
-        FTIndicator.setIndicatorStyle(.dark)
+        KRProgressHUD.show(progressHUDStyle: .black, message: messageText)
     }
     func hideNetworkLoader() {
-        FTIndicator.dismissProgress()
+        KRProgressHUD.dismiss()
         self.isNetworkActivityIndicatorVisible = false
     }
 }

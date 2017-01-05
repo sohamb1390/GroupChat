@@ -4,11 +4,6 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>FTIndicator.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>GTMSessionFetcher.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -40,6 +35,11 @@
 			<false/>
 		</dict>
 		<key>JSQSystemSoundPlayer.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>KRProgressHUD.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -82,17 +82,12 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>088AC29759276D60E3F3B6D2A7980B61</key>
+		<key>05FBA6DC1AE8457F1014DB98CCDDF41D</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>171892E643977CACF1C966931DF0970F</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>35C149B1BDA5B53C84B89A37BF2F6CCB</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -117,17 +112,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>7A99D5371E3E2007944856A268C88672</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>9B6272087EC1AC06B138868BB6C33B15</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>A2E103F3A577E93B2F8E62506586A6F3</key>
+		<key>93D69B49E006D467120624591D865935</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -137,7 +122,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A84DA1D502917E8956383E16DCBDC7CD</key>
+		<key>A9ACEF2C498EF8F83B78A83DB2C1F172</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -162,17 +147,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>C934D4F3E3CEE1D9E649B97CE1717F31</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>D0581AF7BF4A6DA140D280B19ECC7BFF</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>E7A8F44BA30D121B3B6587AE1361DF5E</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>FC82EB475C737E827102EB75AA3CC4FB</key>
 		<dict>
 			<key>primary</key>
 			<true/>

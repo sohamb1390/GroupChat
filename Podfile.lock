@@ -49,13 +49,6 @@ PODS:
   - FirebaseStorage (1.0.5):
     - FirebaseAnalytics (~> 3.5)
     - GTMSessionFetcher/Core (~> 1.1)
-  - FTIndicator (1.1.6):
-    - FTIndicator/FTNotificationIndicator (= 1.1.6)
-    - FTIndicator/FTProgressIndicator (= 1.1.6)
-    - FTIndicator/FTToastIndicator (= 1.1.6)
-  - FTIndicator/FTNotificationIndicator (1.1.6)
-  - FTIndicator/FTProgressIndicator (1.1.6)
-  - FTIndicator/FTToastIndicator (1.1.6)
   - GoogleInterchangeUtilities (1.2.2):
     - GoogleSymbolUtilities (~> 1.1)
   - GoogleSymbolUtilities (1.1.2)
@@ -77,6 +70,7 @@ PODS:
   - JSQMessagesViewController (7.3.4):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
+  - KRProgressHUD (2.1.0)
   - OpinionzAlertView (0.3.1)
   - RxCocoa (3.0.1):
     - RxSwift (~> 3.0)
@@ -89,10 +83,10 @@ DEPENDENCIES:
   - Firebase/Database
   - Firebase/Messaging
   - Firebase/Storage
-  - FTIndicator
   - JDropDownAlert
   - JJMaterialTextField
   - JSQMessagesViewController
+  - KRProgressHUD
   - OpinionzAlertView
   - RxCocoa (~> 3.0)
   - RxSwift (~> 3.0)
@@ -107,7 +101,6 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: ba1e640935235e5fac39dfa816fe7660e72e1a8a
   FirebaseMessaging: acf66347e43c5637c697060c3001d25c809a4131
   FirebaseStorage: 5738284835edb57f0e81d4ae5832bb17c1e4b5fa
-  FTIndicator: c005c5787dbb6c40e0aa5af791e60ac1f164e3c0
   GoogleInterchangeUtilities: d5bc4d88d5b661ab72f9d70c58d02ca8c27ad1f7
   GoogleSymbolUtilities: 631ee17048aa5e9ab133470d768ea997a5ef9b96
   GoogleToolboxForMac: 2b2596cbb7186865e98cadf2b1e262d851c2b168
@@ -116,10 +109,11 @@ SPEC CHECKSUMS:
   JJMaterialTextField: 1ae240b5d75966dd0c2acc9f59d1be6f4e83e0e5
   JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
+  KRProgressHUD: c3a59d192ffe1d470efe2525217f0d3aab06418d
   OpinionzAlertView: 213cf7fa544091962ebd9526ff2e7e120b13c149
   RxCocoa: 15a52fc590dcc700cb4a690a633b5c5184ce3a78
   RxSwift: af5680055c4ad04480189c52d28385b1029493a6
 
-PODFILE CHECKSUM: fc94696a6e19a53452d770ae015540fba70816a7
+PODFILE CHECKSUM: c27c4b3160be62298e83411fd80310e61656cc74
 
 COCOAPODS: 1.1.1

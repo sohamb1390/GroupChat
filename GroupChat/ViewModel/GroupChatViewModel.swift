@@ -30,7 +30,7 @@ class Chat {
     var dateTime = Date()
     var mediaData: Data?
     
-    init(chatUser userID: String, message chatMessage: String, mediaType type: MediaType, chatDateTime chatTime: Date, mediaData data: Data) {
+    init(chatUser userID: String, message chatMessage: String, mediaType type: MediaType, chatDateTime chatTime: Date, mediaData data: Data?) {
         senderID = userID
         message = chatMessage
         mediaType = type
@@ -91,7 +91,7 @@ class GroupChatViewModel {
         return groupID
     }
     // MARK: Create, Delete Chat
-    func createChat(groupID: String, chatChildName: String, mediaName: String, chatMessage: String, chatDateTime: Date, mediaType: MediaType, mediaData: Data, completionHandler: @escaping(_ error: Error?) -> Void) {
+    func createChat(groupID: String, chatChildName: String, senderName: String, mediaName: String?, chatMessage: String, chatDateTime: Date, mediaType: MediaType, mediaData: Data?, completionHandler: @escaping(_ error: Error?) -> Void) {
         
         guard let user = currentUser else {
             completionHandler(error)
@@ -107,8 +107,8 @@ class GroupChatViewModel {
         }
         let chatModel = Chat(chatUser: user.uid, message: chatMessage, mediaType: mediaType, chatDateTime: chatDateTime, mediaData: mediaData)
         
-        FireBaseHandler.createChat(ref: databaseRef, storageRef: storageRef, chatChildName: chatChildName, chatData: chatModel, mediaName: mediaName, groupID: groupID) { (error) in
-            
+        FireBaseHandler.createChat(ref: databaseRef, storageRef: storageRef, senderName: senderName, chatChildName: chatChildName, chatData: chatModel, mediaName: mediaName, groupID: groupID) { (error) in
+            completionHandler(error)
         }
     }
     
@@ -182,12 +182,12 @@ class GroupChatViewModel {
         }
         FireBaseHandler.deleteUserPhoto(storageRefrence: storageRef, completionHandler: completionHandler)
     }
-    func getUserPhoto(databaseReference ref: FIRDatabaseReference?, childName child: String, loggedInUser user: FIRUser?, completionHandler: @escaping (_ image: UIImage?) -> Void) {
-        guard let databaseRef = ref, let currentUser = user  else {
+    func getUserPhoto(databaseReference ref: FIRDatabaseReference?, childName child: String, loggedInUser userID: String?, completionHandler: @escaping (_ image: UIImage?) -> Void) {
+        guard let databaseRef = ref, let currentUserID = userID  else {
             completionHandler(nil)
             return
         }
-        databaseRef.child(child).child(currentUser.uid).observeSingleEvent(of: .value, with: { (snapshot) in
+        databaseRef.child(child).child(currentUserID).observeSingleEvent(of: .value, with: { (snapshot) in
             print(snapshot.key)
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot], snapshots.count > 0, let value = snapshots[0].value {
                 // Photo URL should always be in the first index

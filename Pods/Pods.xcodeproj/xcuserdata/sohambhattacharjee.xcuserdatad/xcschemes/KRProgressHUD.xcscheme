@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'A84DA1D502917E8956383E16DCBDC7CD'
-               BlueprintName = 'FTIndicator'
+               BlueprintIdentifier = 'A9ACEF2C498EF8F83B78A83DB2C1F172'
+               BlueprintName = 'KRProgressHUD'
                ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'FTIndicator.framework'>
+               BuildableName = 'KRProgressHUD.framework'>
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

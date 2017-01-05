@@ -4,22 +4,6 @@
    version = "2.0">
    <Breakpoints>
       <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "GroupChat/ViewModel/GroupChatViewModel.swift"
-            timestampString = "505143599.604151"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "88"
-            endingLineNumber = "88"
-            landmarkName = "getGroupID(groupName:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
          <BreakpointContent
             shouldBeEnabled = "No"
@@ -35,28 +19,7 @@
                   symbolName = "UIViewAlertForUnsatisfiableConstraints"
                   moduleName = "UIKit"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/sohambhattacharjee/Documents/Work/Personal%20Stuffs/SourceTree-Repo/GroupChat-Firebase/GroupChat/Controller/AddGroupViewController.swift"
-                  timestampString = "505151970.47767"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "111"
-                  endingLineNumber = "111"
-                  offsetFromSymbolStart = "390">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "GroupChat.AddGroupViewController.(addGroup () -&gt; ()).(closure #1)"
-                  moduleName = "GroupChat"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/sohambhattacharjee/Documents/Work/Personal%20Stuffs/SourceTree-Repo/GroupChat-Firebase/GroupChat/Controller/AddGroupViewController.swift"
-                  timestampString = "505151970.479637"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "114"
-                  endingLineNumber = "114"
-                  offsetFromSymbolStart = "27">
+                  offsetFromSymbolStart = "0">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -67,14 +30,46 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "GroupChat/ViewModel/GroupChatViewModel.swift"
-            timestampString = "505143699.991518"
+            filePath = "GroupChat/Controller/ChatViewController.swift"
+            timestampString = "505318072.684426"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "216"
-            endingLineNumber = "216"
-            landmarkName = "checkGroupNameAlreadyExists(groupChildName:currentGroupName:completionHandler:)"
+            startingLineNumber = "196"
+            endingLineNumber = "196"
+            landmarkName = "removeMessage(DeletedChatId:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "GroupChat.ChatViewController.(removeMessage in _8A88435D3A5A3EC0DDD9193B37AE2227) (DeletedChatId : Swift.String) -&gt; ()"
+                  moduleName = "GroupChat"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sohambhattacharjee/Documents/Project/SourceTree-Repo/GroupChat/GroupChat/Controller/ChatViewController.swift"
+                  timestampString = "505318186.59372"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "196"
+                  endingLineNumber = "196"
+                  offsetFromSymbolStart = "44">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "GroupChat.ChatViewController.((removeMessage in _8A88435D3A5A3EC0DDD9193B37AE2227) (DeletedChatId : Swift.String) -&gt; ()).(closure #1)"
+                  moduleName = "GroupChat"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sohambhattacharjee/Documents/Project/SourceTree-Repo/GroupChat/GroupChat/Controller/ChatViewController.swift"
+                  timestampString = "505318186.595106"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "197"
+                  endingLineNumber = "197"
+                  offsetFromSymbolStart = "36">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -83,13 +78,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "GroupChat/ViewModel/GroupChatViewModel.swift"
-            timestampString = "505143703.903597"
+            filePath = "GroupChat/Controller/ChatViewController.swift"
+            timestampString = "505318139.717405"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "221"
-            endingLineNumber = "221"
-            landmarkName = "checkGroupNameAlreadyExists(groupChildName:currentGroupName:completionHandler:)"
+            startingLineNumber = "199"
+            endingLineNumber = "199"
+            landmarkName = "removeMessage(DeletedChatId:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

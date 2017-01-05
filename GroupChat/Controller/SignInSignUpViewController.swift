@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import FTIndicator
 import Firebase
 import RxSwift
 import RxCocoa
@@ -22,9 +21,16 @@ enum Mode: String {
 class SignInSignUpViewController: UIViewController {
     
     // MARK: IBOutlets
-    @IBOutlet weak var lblSignInSignUp: UILabel!
     @IBOutlet weak var btnSignInSignUp: UIButton!
-    @IBOutlet weak var btnPhoto: UIButton!
+    @IBOutlet weak var btnPhoto: UIButton! {
+        didSet {
+            btnPhoto.clipsToBounds = true
+            btnPhoto.layer.cornerRadius = btnPhoto.frame.size.width / 2.0
+            btnPhoto.layer.borderColor = UIColor.white.cgColor
+            btnPhoto.layer.borderWidth = 2.0
+            btnPhoto.layer.masksToBounds = true
+        }
+    }
     
     @IBOutlet weak var signInUserEmailTextField: JJMaterialTextfield! {
         didSet {
@@ -113,7 +119,7 @@ class SignInSignUpViewController: UIViewController {
         viewModel = GroupChatViewModel()
         
         // Token Refresh
-        UIApplication.shared.showNetworkLoader(messageText: "Checking for existing session")
+        UIApplication.shared.showNetworkLoader(messageText: "Existing Session")
         
         viewModel!.tokenRefresh { (error, isEmailVerified) in
             UIApplication.shared.hideNetworkLoader()
@@ -122,8 +128,8 @@ class SignInSignUpViewController: UIViewController {
             }
         }
         // Register Keyboard observer only for smaller devices
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHandler(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHandler(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardAppeared(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDismissed(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
 
         signUpViewXConstraint.constant = -view.frame.size.width
     }
@@ -229,7 +235,7 @@ class SignInSignUpViewController: UIViewController {
         retypePwdTextField.text = ""
     }
     private func signIn(EmailID email: String, Password pwd: String) {
-        view.endEditing(true)
+        
         UIApplication.shared.showNetworkLoader(messageText: "Signing you In")
 
         // Sign In
@@ -267,7 +273,7 @@ class SignInSignUpViewController: UIViewController {
         }
     }
     private func signUp(UserName uName: String, EmailID email: String, Password pwd: String) {
-        view.endEditing(true)
+
         // Sign Up
         // Creating the User using Email & Password
         UIApplication.shared.showNetworkLoader(messageText: "Signing Up")
@@ -347,28 +353,38 @@ extension SignInSignUpViewController: UIImagePickerControllerDelegate, UINavigat
         print(newImage.size)
         btnPhoto.setTitle("", for: .normal)
         btnPhoto.setImage(newImage, for: .normal)
+        btnPhoto.setNeedsDisplay()
     }
 }
 // MARK: - Keyboard Listeners
 extension SignInSignUpViewController {
-    func keyboardHandler(notification: NSNotification) {
+    func keyboardAppeared(notification: NSNotification) {
         if let _ = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             switch currentMode {
             case .SignIn:
                 if signInBlurViewYConstraint.constant == 0 {
                     signInBlurViewYConstraint.constant -= 100.0
                 }
-                else {
-                    signInBlurViewYConstraint.constant = 0.0
-                }
                 break
             case .SignUp:
-                if signUpBlurViewYConstraint.constant == 10 {
+                if signUpBlurViewYConstraint.constant == 0 {
                     signUpBlurViewYConstraint.constant -= 100.0
                 }
-                else {
-                    signUpBlurViewYConstraint.constant = 10.0
-                }
+                break
+            }
+        }
+        UIView.animate(withDuration: 0.5, animations: {
+            self.view.layoutIfNeeded()
+        })
+    }
+    func keyboardDismissed(notification: NSNotification) {
+        if let _ = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            switch currentMode {
+            case .SignIn:
+                signInBlurViewYConstraint.constant = 0.0
+                break
+            case .SignUp:
+                signUpBlurViewYConstraint.constant = 0.0
                 break
             }
         }
@@ -390,10 +406,12 @@ extension SignInSignUpViewController: UITextFieldDelegate {
         return emailTest.evaluate(with: testStr)
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
         if currentMode == .SignIn {
             if textField == signInUserEmailTextField {
                 signInPwdTextField.becomeFirstResponder()
+            }
+            else {
+                toggleSignInSignUp(btnSignInSignUp)
             }
         }
         else {
@@ -405,6 +423,9 @@ extension SignInSignUpViewController: UITextFieldDelegate {
             }
             else if textField == signUpPwdTextField {
                 retypePwdTextField.becomeFirstResponder()
+            }
+            else {
+                toggleSignInSignUp(btnSignInSignUp)
             }
         }
         return true

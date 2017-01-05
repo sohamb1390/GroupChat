@@ -157,7 +157,7 @@ class GroupsTableViewController: UITableViewController {
         if segue.identifier == SegueConstants.addGroupScreenSegue, let vc = segue.destination as? AddGroupViewController {
             vc.delegate = self
         }
-        else if segue.identifier == SegueConstants.chatScreenSegue, let vc = segue.destination as? ViewController {
+        else if segue.identifier == SegueConstants.chatScreenSegue, let vc = segue.destination as? ChatViewController {
             if let currentUser = viewModel.currentUser, let displayName = currentUser.displayName {
                 vc.senderDisplayName = displayName
                 vc.senderId = currentUser.uid

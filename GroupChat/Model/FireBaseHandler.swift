@@ -39,7 +39,7 @@ class FireBaseHandler: NSObject {
     // MARK: - Create, Delete, Modify Chat
     
     // MARK: Create a new chat
-    class func createChat(ref: FIRDatabaseReference, storageRef: FIRStorageReference, chatChildName: String, chatData: Chat, mediaName: String?, groupID: String, completionHandler: @escaping(_ error: Error?) -> Void) {
+    class func createChat(ref: FIRDatabaseReference, storageRef: FIRStorageReference, senderName: String, chatChildName: String, chatData: Chat, mediaName: String?, groupID: String, completionHandler: @escaping(_ error: Error?) -> Void) {
         
         // Convert Chat Data into detail description
         let userID = chatData.senderID
@@ -56,6 +56,7 @@ class FireBaseHandler: NSObject {
         
         // Create Chat
         let parameters = ["chatUserID": userID,
+                          "chatSenderName": senderName,
                           "chatMessage": chatMessage,
                           "chatDateTime": dateTimeString,
                           "mediaURL": ""]
@@ -111,6 +112,11 @@ class FireBaseHandler: NSObject {
                     completionHandler(error)
                 }
             }
+        }
+        else {
+            ref.child(chatChildName).child(groupID).childByAutoId().setValue(parameters, withCompletionBlock: { (error, ref) in
+                completionHandler(error)
+            })
         }
     }
     // MARK: SignIn & SignUp & Signout

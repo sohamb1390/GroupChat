@@ -15,7 +15,7 @@ target 'GroupChat' do
   pod 'RxSwift',    '~> 3.0'
   pod 'RxCocoa',    '~> 3.0'
   pod 'JSQMessagesViewController'
-  pod 'FTIndicator'
+  pod 'KRProgressHUD'
   pod 'JDropDownAlert'
   pod 'OpinionzAlertView'
   pod 'JJMaterialTextField'
