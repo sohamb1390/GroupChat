@@ -8,6 +8,7 @@
 
 import UIKit
 import JSQMessagesViewController
+import OpinionzAlertView
 
 class GroupsTableViewController: UITableViewController {
     
@@ -49,7 +50,7 @@ class GroupsTableViewController: UITableViewController {
         viewModel.signOut { error in
             if error != nil {
                 print ("Error signing out: %@", error!)
-                self.showAlert(title: "Unable to sign out", message: error!.localizedDescription, action: [UIAlertAction(title: "Ok", style: .default, handler: nil)])
+                self.showAlert(title: "Unable to sign out", message: error!.localizedDescription, alertBGColor: .red)
             }
             else {
                 self.popToSignInSignOutScreen()
@@ -85,7 +86,7 @@ class GroupsTableViewController: UITableViewController {
             let passwordTextField = alertController.textFields![0] as UITextField
             guard let password = passwordTextField.text, !password.isEmpty else {
                 print("Password is blank")
-                self.showAlert(title: "Password cannot be empty", message: "Please provide a valid password", action: [UIAlertAction.init(title: "Ok", style: .default, handler: nil)])
+                self.showAlert(title: "Password cannot be empty", message: "Please provide a valid password", alertBGColor: .red)
                 return
             }
             if password == grpModel.groupPassword  {
@@ -95,7 +96,7 @@ class GroupsTableViewController: UITableViewController {
             }
             else {
                 print("Password didn't match")
-                self.showAlert(title: "Invalid Password", message: "Please provide a valid password", action: [UIAlertAction.init(title: "Ok", style: .default, handler: nil)])
+                self.showAlert(title: "Invalid Password", message: "Please provide a valid password", alertBGColor: .red)
             }
         })
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: {
@@ -177,20 +178,24 @@ extension GroupsTableViewController {
     
     // MARK: Firebase Data Change Observer
     func loadGroups() {
-        UIApplication.shared.showNetworkLoader(messageText: "Fetching your groups", shouldUseBlurredBG: true, font: UIFont(name: "AvenirNext-Regular", size: 15.0)!)
+        UIApplication.shared.showNetworkLoader(messageText: "Fetching your groups")
+        
         viewModel.loadGroups(groupChildName: "Groups") { (snapshot, error) in
-            UIApplication.shared.hideNetworkLoader(delay: 1.0, completionBlock: { (completed) in
+            OperationQueue.main.addOperation({
+                UIApplication.shared.hideNetworkLoader()
                 if error != nil {
-                    self.showAlert(title: "Unable to fetch your groups", message: "Some unknown error occured, please try again later", action: [UIAlertAction(title: "Ok", style: .default, handler: nil)])
+                    self.showAlert(title: "Unable to fetch your groups", message: "Some unknown error occured, please try again later", alertBGColor: .red)
                 }
                 else {
                     let postDictArray = snapshot!.value as? [String : AnyObject] ?? [:]
                     if postDictArray.count < 1 {
                         // No groups found
                         // Add atleast one group to continue
-                        self.showAlert(title: "No groups found", message: "Please add atleast one group to continue", action: [UIAlertAction.init(title: "Add one group", style: .default, handler: { action in
+                        let alertView = OpinionzAlertView(title: "No groups found", message: "Please add atleast one group to continue", cancelButtonTitle: "Cancel", otherButtonTitles: ["Add one group"], usingBlockWhenTapButton: { (alertView, index) in
                             self.performSegue(withIdentifier: SegueConstants.addGroupScreenSegue, sender: self)
-                        })])
+                        })
+                        alertView?.iconType = OpinionzAlertIconWarning
+                        alertView?.show()
                     }
                     else {
                         // remove previous values

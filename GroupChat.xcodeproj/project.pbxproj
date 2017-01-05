@@ -21,7 +21,7 @@
 		44A807261E10EF8D00B5924E /* AddGroup.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44A807251E10EF8D00B5924E /* AddGroup.storyboard */; };
 		44A807291E10F53000B5924E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 44A807281E10F53000B5924E /* GoogleService-Info.plist */; };
 		44A8072D1E111D8D00B5924E /* SignInSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A8072C1E111D8D00B5924E /* SignInSignUpViewController.swift */; };
-		44ADAFD21E166FEF00278F30 /* RoundBorderedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ADAFD11E166FEF00278F30 /* RoundBorderedButton.swift */; };
+		44ADAFD21E166FEF00278F30 /* RoundBorderedBlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ADAFD11E166FEF00278F30 /* RoundBorderedBlurView.swift */; };
 		44D5A8EA1E151FA900F070B2 /* FireBaseHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D5A8E91E151FA900F070B2 /* FireBaseHandler.swift */; };
 		44D5A8ED1E151FC700F070B2 /* GroupChatConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D5A8EB1E151FC700F070B2 /* GroupChatConstants.swift */; };
 		44D5A8EE1E151FC700F070B2 /* GroupChatExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D5A8EC1E151FC700F070B2 /* GroupChatExtension.swift */; };
@@ -72,7 +72,7 @@
 		44A807251E10EF8D00B5924E /* AddGroup.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = AddGroup.storyboard; sourceTree = "<group>"; };
 		44A807281E10F53000B5924E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		44A8072C1E111D8D00B5924E /* SignInSignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInSignUpViewController.swift; sourceTree = "<group>"; };
-		44ADAFD11E166FEF00278F30 /* RoundBorderedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundBorderedButton.swift; sourceTree = "<group>"; };
+		44ADAFD11E166FEF00278F30 /* RoundBorderedBlurView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundBorderedBlurView.swift; sourceTree = "<group>"; };
 		44D5A8E91E151FA900F070B2 /* FireBaseHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FireBaseHandler.swift; sourceTree = "<group>"; };
 		44D5A8EB1E151FC700F070B2 /* GroupChatConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupChatConstants.swift; sourceTree = "<group>"; };
 		44D5A8EC1E151FC700F070B2 /* GroupChatExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupChatExtension.swift; sourceTree = "<group>"; };
@@ -198,7 +198,7 @@
 		44A8071E1E10EDC000B5924E /* View */ = {
 			isa = PBXGroup;
 			children = (
-				44ADAFD11E166FEF00278F30 /* RoundBorderedButton.swift */,
+				44ADAFD11E166FEF00278F30 /* RoundBorderedBlurView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -532,7 +532,7 @@
 			files = (
 				44D5A8ED1E151FC700F070B2 /* GroupChatConstants.swift in Sources */,
 				4473D0561E1B60BB0060EAE4 /* NetworkHandler.swift in Sources */,
-				44ADAFD21E166FEF00278F30 /* RoundBorderedButton.swift in Sources */,
+				44ADAFD21E166FEF00278F30 /* RoundBorderedBlurView.swift in Sources */,
 				44D5A8F01E15200B00F070B2 /* GroupChatViewModel.swift in Sources */,
 				44A807221E10EF5300B5924E /* GroupsTableViewController.swift in Sources */,
 				44A806F11E10EC3D00B5924E /* ViewController.swift in Sources */,
