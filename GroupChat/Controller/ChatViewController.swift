@@ -311,15 +311,17 @@ class ChatViewController: JSQMessagesViewController {
         picker.mediaTypes = [kUTTypeImage as String]
         present(picker, animated: true, completion: nil)
     }
-    private func openProfilePictureViewer(indexPath: IndexPath, image: UIImage) {
+    private func openProfilePictureViewer(indexPath: IndexPath, image: UIImage, isMediaImage: Bool) {
         
         var avatarImage = image
-        
-        // Message Object
         let message = messages[indexPath.row]
-        for imgeDict in imageDictArray {
-            if let rowNumber = imgeDict["row"] as? NSNumber, Int(rowNumber) == indexPath.row, let image = imgeDict["image"] as? UIImage {
-                avatarImage = image
+
+        // Message Object
+        if !isMediaImage {
+            for imgeDict in imageDictArray {
+                if let rowNumber = imgeDict["row"] as? NSNumber, Int(rowNumber) == indexPath.row, let image = imgeDict["image"] as? UIImage {
+                    avatarImage = image
+                }
             }
         }
         let popupController = PopupController
@@ -470,9 +472,16 @@ class ChatViewController: JSQMessagesViewController {
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, didTapCellAt indexPath: IndexPath!, touchLocation: CGPoint) {
         view.endEditing(true)
     }
-    
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAt indexPath: IndexPath!) {
+        let message = messages[indexPath.row]
+        if message.isMediaMessage {
+            let mediaItem = message.media
+            let photoItem = mediaItem as! JSQPhotoMediaItem
+            openProfilePictureViewer(indexPath: indexPath, image: photoItem.image, isMediaImage: true)
+        }
+    }
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, didTapAvatarImageView avatarImageView: UIImageView!, at indexPath: IndexPath!) {
-        openProfilePictureViewer(indexPath: indexPath, image: avatarImageView.image!)
+        openProfilePictureViewer(indexPath: indexPath, image: avatarImageView.image!, isMediaImage: false)
     }
     // MARK: - UITextView Delegates
     override func textViewDidChange(_ textView: UITextView) {
