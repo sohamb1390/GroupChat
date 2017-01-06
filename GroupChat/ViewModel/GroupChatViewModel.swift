@@ -66,6 +66,11 @@ class GroupChatViewModel {
         storageReference = FIRStorage.storage().reference(forURL: URLConstants.storageURL)
     }
     
+    // MARK: Get User online status
+    func getUserOnlineStatus(completionHandler: @escaping (_ loggedInUser: FIRUser?) -> Void) {
+        FireBaseHandler.getUserStatusNetworkStatus(completionHandler: completionHandler)
+    }
+    
     // MARK: Load Groups
     func loadGroups(groupChildName: String, completionHandler: @escaping (_ snapshot: FIRDataSnapshot?, _ error: Error?) -> Void) {
         guard let databaseRef = ref else {

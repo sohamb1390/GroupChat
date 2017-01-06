@@ -50,7 +50,7 @@ class UserProfilePopupViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    class func instance(userImage: UIImage, userName: String, userEmail: String?) -> UserProfilePopupViewController {
+    class func instance(userImage: UIImage, userName: String, userEmail: String?, onlineStatus: Bool) -> UserProfilePopupViewController {
         let vc = UserProfilePopupViewController(nibName: "UserProfilePopupViewController", bundle: nil)
         image = userImage
         uName = userName

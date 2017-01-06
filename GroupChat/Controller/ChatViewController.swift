@@ -11,6 +11,7 @@ import JSQMessagesViewController
 import Firebase
 import FirebaseStorage
 import MobileCoreServices
+import Photos
 
 class ChatViewController: JSQMessagesViewController {
 
@@ -54,8 +55,11 @@ class ChatViewController: JSQMessagesViewController {
     private lazy var usersTypingQuery: FIRDatabaseQuery = {
         self.getRef().child("typingIndicator").queryOrderedByValue().queryEqual(toValue: true)
     }()
-
-    var messages = [JSQMessage]()
+    
+    private var loggedInUsersArray: [FIRUser] = []
+    private var updatedMessageRefHandle: FIRDatabaseHandle?
+    private var messages = [JSQMessage]()
+    private var photoMessageMap = [String: JSQPhotoMediaItem]()
     var imageDictArray = [[String: Any]]()
     
     // MARK: - Lifecycle
@@ -78,6 +82,9 @@ class ChatViewController: JSQMessagesViewController {
         
         // Observe messages
         observeMessages()
+        
+        // Observe users
+        observeUsers()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -87,14 +94,15 @@ class ChatViewController: JSQMessagesViewController {
         super.viewDidAppear(animated)
         
         // Download the user image and set it
-        if btnUserProfile?.imageView?.image == nil {
+        if btnUserProfile?.accessibilityValue == nil {
             viewModel.getUserPhoto(databaseReference: viewModel.ref, childName: "users", loggedInUser: viewModel.currentUser?.uid, completionHandler: { (image) in
                 OperationQueue.main.addOperation({ 
                     if let img = image {
                         self.btnUserProfile?.setImage(img, for: .normal)
+                        self.btnUserProfile?.accessibilityValue = "Image"
                     }
                     else {
-                        self.btnUserProfile?.setImage(nil, for: .normal)
+                        self.btnUserProfile?.setImage(UIImage.init(named: "defaultImage"), for: .normal)
                     }
                 })
             })
@@ -110,7 +118,14 @@ class ChatViewController: JSQMessagesViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+    deinit {
+        if let refHandle = newMessageRefHandle {
+            messageRef.removeObserver(withHandle: refHandle)
+        }
+        if let refHandle = updatedMessageRefHandle {
+            messageRef.removeObserver(withHandle: refHandle)
+        }
+    }
     // MARK: - Customise UI
     func customiseUI() {
         btnUserProfile = UIButton(type: .custom)
@@ -141,6 +156,19 @@ class ChatViewController: JSQMessagesViewController {
                 
                 // 5
                 self.finishReceivingMessage(animated: true)
+            } else if let id = messageData["chatUserID"] as String!, let photoURL = messageData["mediaURL"] as String!, let name = messageData["chatSenderName"] as String! {
+                
+                // 2
+                if let mediaItem = JSQPhotoMediaItem(maskAsOutgoing: id == self.senderId) {
+                    // 3
+                    self.addPhotoMessage(withId: id, key: snapshot.key, displayName: name, mediaItem: mediaItem)
+                    // 4
+//                    if photoURL.hasPrefix("gs://") {
+//                        self.fetchImageDataAtURL(photoURL, forMediaItem: mediaItem, clearsPhotoMessageMapOnSuccessForKey: nil)
+//                    }
+                    self.fetchImageDataAtURL(photoURL, forMediaItem: mediaItem, clearsPhotoMessageMapOnSuccessForKey: nil)
+                }
+                
             } else {
                 print("Error! Could not decode message data")
             }
@@ -153,6 +181,17 @@ class ChatViewController: JSQMessagesViewController {
                 self.finishReceivingMessage()
             } else {
                 print("Error! Could not decode message data")
+            }
+        })
+        updatedMessageRefHandle = messageRef.observe(.childChanged, with: { (snapshot) in
+            let key = snapshot.key
+            let messageData = snapshot.value as! Dictionary<String, String> // 1
+            
+            if let photoURL = messageData["mediaURL"] as String! { // 2
+                // The photo has been updated.
+                if let mediaItem = self.photoMessageMap[key] { // 3
+                    self.fetchImageDataAtURL(photoURL, forMediaItem: mediaItem, clearsPhotoMessageMapOnSuccessForKey: key) // 4
+                }
             }
         })
     }
@@ -173,7 +212,12 @@ class ChatViewController: JSQMessagesViewController {
         }
     }
     private func observeUsers() {
-        
+//        viewModel.getUserOnlineStatus { (loggedInUser) in
+//            if let user = loggedInUser {
+//                self.loggedInUsersArray.append(user)
+//            }
+//            print(loggedInUser)
+//        }
     }
     
     // MARK: - Chat Controls
@@ -212,6 +256,15 @@ class ChatViewController: JSQMessagesViewController {
             }
         }
     }
+    private func addPhotoMessage(withId id: String, key: String, displayName: String, mediaItem: JSQPhotoMediaItem) {
+        if let message = JSQMessage(senderId: id, displayName: displayName, media: mediaItem) {
+            messages.append(message)
+            if (mediaItem.image == nil) {
+                photoMessageMap[key] = mediaItem
+            }
+            collectionView.reloadData()
+        }
+    }
     private func removeMessage(DeletedChatId deletedChatSenderId: String) {
         var tempChatMessages = messages
         for (index, message) in tempChatMessages.enumerated() {
@@ -220,6 +273,35 @@ class ChatViewController: JSQMessagesViewController {
             }
         }
         messages = tempChatMessages
+    }
+    private func fetchImageDataAtURL(_ photoURL: String, forMediaItem mediaItem: JSQPhotoMediaItem, clearsPhotoMessageMapOnSuccessForKey key: String?) {
+        // 1
+        let storageRef = FIRStorage.storage().reference(forURL: photoURL)
+        
+        // 2
+        storageRef.data(withMaxSize: INT64_MAX){ (data, error) in
+            if let error = error {
+                print("Error downloading image data: \(error)")
+                return
+            }
+            
+            // 3
+            storageRef.metadata(completion: { (metadata, metadataErr) in
+                if let error = metadataErr {
+                    print("Error downloading metadata: \(error)")
+                    return
+                }
+                // 4
+                mediaItem.image = UIImage(data: data!)
+                self.collectionView.reloadData()
+                
+                // 5
+                guard key != nil else {
+                    return
+                }
+                self.photoMessageMap.removeValue(forKey: key!)
+            })
+        }
     }
     private func handleCameraControl(type: UIImagePickerControllerSourceType) {
         let picker = UIImagePickerController()
@@ -240,7 +322,7 @@ class ChatViewController: JSQMessagesViewController {
                 avatarImage = image
             }
         }
-        _ = PopupController
+        let popupController = PopupController
             .create(self)
             .customize(
                 [
@@ -255,7 +337,10 @@ class ChatViewController: JSQMessagesViewController {
             .didCloseHandler { _ in
                 print("closed popup!")
             }
-            .show(UserProfilePopupViewController.instance(userImage: avatarImage, userName: message.senderDisplayName, userEmail: (message.senderId == senderId ? viewModel.currentUser?.email : nil)))
+            // Get user status
+
+            _ = popupController.show(UserProfilePopupViewController.instance(userImage: avatarImage, userName: message.senderDisplayName, userEmail: (message.senderId == self.senderId ? self.viewModel.currentUser?.email : nil), onlineStatus: false)) // Still figuring out how to get online status of each user!! :(
+        
     }
     override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
         
@@ -282,6 +367,19 @@ class ChatViewController: JSQMessagesViewController {
             actionSheet.dismiss(animated: true, completion: nil)
         }))
         present(actionSheet, animated: true, completion: nil)
+    }
+    
+    func sendPictureMessage(image: UIImage, imageName: String) {
+        // Create a picture chat
+        isTyping = false
+        
+        var data = NSData()
+        data = UIImageJPEGRepresentation(image, 1.0)! as NSData
+
+        viewModel.createChat(groupID: groupID!, chatChildName: "Chat", senderName: senderDisplayName, mediaName: imageName, chatMessage: "", chatDateTime: Date(), mediaType: .Picture, mediaData: data as Data) { (error) in
+            self.finishSendingMessage(animated: true)
+        }
+        JSQSystemSoundPlayer.jsq_playMessageSentSound() // 4
     }
     
     // MARK: - JSQMessageController UICollectionView delegates
@@ -384,6 +482,28 @@ class ChatViewController: JSQMessagesViewController {
 }
 extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        picker.dismiss(animated: true, completion:nil)
+        var selectedImage: UIImage?
+        if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
+            print(image.size)
+            selectedImage = image
+            //sendPictureMessage(image: image)
+        }
+        else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            print(image.size)
+            //sendPictureMessage(image: image)
+            selectedImage = image
+        }
         
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .medium
+        let dateString = dateFormatter.string(from: Date())
+        let imageURL = info[UIImagePickerControllerReferenceURL] as! URL
+        let imageName = "\(dateString)-\(imageURL.lastPathComponent)"
+
+        if selectedImage != nil {
+            sendPictureMessage(image: selectedImage!, imageName: imageName)
+        }
     }
 }

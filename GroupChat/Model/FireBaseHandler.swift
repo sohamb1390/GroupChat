@@ -38,15 +38,17 @@ class FireBaseHandler: NSObject {
     }
     
     // MARK: Online/Offline capabilities
-    class func getUserStatusNetworkStatus(database: FIRDatabase) {
-        let connectedRef = database.reference(withPath: ".info/connected")
-        connectedRef.observe(.value, with: { snapshot in
-            if let connected = snapshot.value as? Bool, connected {
-                print("Connected")
+    class func getUserStatusNetworkStatus(completionHandler: @escaping (_ loggedInUser: FIRUser?) -> Void) {
+        
+        FIRAuth.auth()!.addStateDidChangeListener() { (auth, user) in
+            if let user = user {
+                print("User is signed in with uid:", user.uid)
+                completionHandler(user)
             } else {
-                print("Not connected")
+                print("No user is signed in.")
+                completionHandler(nil)
             }
-        })
+        }
     }
     
     // MARK: - Create, Delete, Modify Chat
