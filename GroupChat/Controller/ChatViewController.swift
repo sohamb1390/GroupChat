@@ -56,6 +56,7 @@ class ChatViewController: JSQMessagesViewController {
     }()
 
     var messages = [JSQMessage]()
+    var imageDictArray = [[String: Any]]()
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -99,6 +100,8 @@ class ChatViewController: JSQMessagesViewController {
             })
         }
         observeTyping()
+        
+        scrollToBottom(animated: true)
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -226,7 +229,34 @@ class ChatViewController: JSQMessagesViewController {
         picker.mediaTypes = [kUTTypeImage as String]
         present(picker, animated: true, completion: nil)
     }
-    
+    private func openProfilePictureViewer(indexPath: IndexPath, image: UIImage) {
+        
+        var avatarImage = image
+        
+        // Message Object
+        let message = messages[indexPath.row]
+        for imgeDict in imageDictArray {
+            if let rowNumber = imgeDict["row"] as? NSNumber, Int(rowNumber) == indexPath.row, let image = imgeDict["image"] as? UIImage {
+                avatarImage = image
+            }
+        }
+        _ = PopupController
+            .create(self)
+            .customize(
+                [
+                    .animation(.slideUp),
+                    .scrollable(false),
+                    .backgroundStyle(.blackFilter(alpha: 0.7))
+                ]
+            )
+            .didShowHandler { popup in
+                print("showed popup!")
+            }
+            .didCloseHandler { _ in
+                print("closed popup!")
+            }
+            .show(UserProfilePopupViewController.instance(userImage: avatarImage, userName: message.senderDisplayName, userEmail: (message.senderId == senderId ? viewModel.currentUser?.email : nil)))
+    }
     override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
         
         // Create a chat
@@ -298,6 +328,9 @@ class ChatViewController: JSQMessagesViewController {
             
             viewModel.getUserPhoto(databaseReference: viewModel.ref, childName: "users", loggedInUser: message.senderId, completionHandler: { (image) in
                 if let img = image {
+                    // set image
+                    self.imageDictArray.append(["image": img,
+                                           "row": NSNumber.init(value: indexPath.row)])
                     OperationQueue.main.addOperation({ 
                         cell.avatarImageView.image = JSQMessagesAvatarImageFactory.avatarImage(with: img, diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault)).avatarImage
                         self.cache.setObject(img, forKey: indexPath.row as AnyObject)
@@ -340,6 +373,9 @@ class ChatViewController: JSQMessagesViewController {
         view.endEditing(true)
     }
     
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, didTapAvatarImageView avatarImageView: UIImageView!, at indexPath: IndexPath!) {
+        openProfilePictureViewer(indexPath: indexPath, image: avatarImageView.image!)
+    }
     // MARK: - UITextView Delegates
     override func textViewDidChange(_ textView: UITextView) {
         super.textViewDidChange(textView)

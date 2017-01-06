@@ -188,16 +188,19 @@
                                 <blurEffect style="dark"/>
                             </visualEffectView>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7e8-bF-a3C" customClass="RoundBorderedBlurView" customModule="GroupChat" customModuleProvider="target">
-                                <rect key="frame" x="-304" y="94" width="288" height="380"/>
+                                <rect key="frame" x="16" y="94" width="288" height="380"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="UcR-NL-cTh">
                                     <rect key="frame" x="0.0" y="0.0" width="288" height="380"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QNY-Dp-LGG">
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QNY-Dp-LGG">
                                             <rect key="frame" x="214" y="8" width="60" height="60"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="60" id="0nR-xc-QMH"/>
+                                                <constraint firstAttribute="height" constant="60" id="km6-O4-W8G"/>
+                                            </constraints>
                                             <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="14"/>
-                                            <state key="normal" title="Photo">
+                                            <state key="normal" image="defaultImage">
                                                 <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
@@ -278,12 +281,14 @@
                                         </button>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="QNY-Dp-LGG" secondAttribute="trailing" constant="14" id="4J1-hx-btP"/>
                                         <constraint firstItem="WI8-Yg-Mcf" firstAttribute="top" secondItem="j0d-eo-2eh" secondAttribute="bottom" constant="30" id="6xa-mL-gF5"/>
                                         <constraint firstItem="8J3-Wx-xWI" firstAttribute="leading" secondItem="UcR-NL-cTh" secondAttribute="leading" constant="14" id="A96-sR-BuD"/>
                                         <constraint firstItem="j0d-eo-2eh" firstAttribute="leading" secondItem="UcR-NL-cTh" secondAttribute="leading" constant="14" id="Bex-Uo-fZp"/>
                                         <constraint firstAttribute="bottom" secondItem="OF5-U7-lXh" secondAttribute="bottom" id="ES4-uA-hkU"/>
                                         <constraint firstItem="WI8-Yg-Mcf" firstAttribute="leading" secondItem="UcR-NL-cTh" secondAttribute="leading" constant="14" id="GEG-8e-eT3"/>
                                         <constraint firstAttribute="trailing" secondItem="j0d-eo-2eh" secondAttribute="trailing" constant="14" id="JhY-gy-j5c"/>
+                                        <constraint firstItem="QNY-Dp-LGG" firstAttribute="top" secondItem="UcR-NL-cTh" secondAttribute="top" constant="8" id="Km4-CX-3fC"/>
                                         <constraint firstItem="OF5-U7-lXh" firstAttribute="leading" secondItem="UcR-NL-cTh" secondAttribute="leading" id="Sw7-hc-nBw"/>
                                         <constraint firstAttribute="trailing" secondItem="WI8-Yg-Mcf" secondAttribute="trailing" constant="14" id="TzN-xR-04X"/>
                                         <constraint firstItem="j0d-eo-2eh" firstAttribute="top" secondItem="E9t-mf-udy" secondAttribute="bottom" constant="30" id="Yni-zz-ejf"/>
@@ -311,7 +316,7 @@
                             <constraint firstItem="PbV-HK-MJY" firstAttribute="centerX" secondItem="Z4f-eN-sr2" secondAttribute="centerX" id="Dhu-u7-3OJ"/>
                             <constraint firstItem="XAW-H1-XqK" firstAttribute="leading" secondItem="Z4f-eN-sr2" secondAttribute="leading" id="FVY-2u-jY7"/>
                             <constraint firstAttribute="trailing" secondItem="XAW-H1-XqK" secondAttribute="trailing" id="SWh-Xe-CsC"/>
-                            <constraint firstItem="7e8-bF-a3C" firstAttribute="centerX" secondItem="Z4f-eN-sr2" secondAttribute="centerX" constant="-320" id="jhj-hK-aCa"/>
+                            <constraint firstItem="7e8-bF-a3C" firstAttribute="centerX" secondItem="Z4f-eN-sr2" secondAttribute="centerX" id="jhj-hK-aCa"/>
                             <constraint firstItem="PbV-HK-MJY" firstAttribute="centerY" secondItem="Z4f-eN-sr2" secondAttribute="centerY" id="l22-XS-5hq"/>
                         </constraints>
                     </view>
@@ -364,4 +369,7 @@
             <point key="canvasLocation" x="-591" y="921"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="defaultImage" width="50" height="50"/>
+    </resources>
 </document>

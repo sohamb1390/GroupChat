@@ -308,10 +308,10 @@ class SignInSignUpViewController: UIViewController {
                 self.handleCameraControl(type: .photoLibrary)
             }))
         }
-        if btnPhoto.imageView?.image != nil {
-            actionSheet.addAction(UIAlertAction.init(title: "Delete Photo", style: .destructive, handler: { action in
-                self.btnPhoto.setImage(nil, for: .normal)
-                self.btnPhoto.setTitle("Photo", for: .normal)
+        if btnPhoto.accessibilityValue != nil {
+            actionSheet.addAction(UIAlertAction(title: "Delete Photo", style: .destructive, handler: { action in
+                self.btnPhoto.setImage(UIImage(named: "defaultImage"), for: .normal)
+                self.btnPhoto.accessibilityValue = nil
             }))
         }
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
@@ -347,8 +347,8 @@ extension SignInSignUpViewController: UIImagePickerControllerDelegate, UINavigat
     private func setProfileImage(image: UIImage) {
         let newImage = image.resizedImageWithinRect(rectSize: CGSize(width: 200.0, height: 200.0))
         print(newImage.size)
-        btnPhoto.setTitle("", for: .normal)
         btnPhoto.setImage(newImage, for: .normal)
+        btnPhoto.accessibilityValue = "Image"
         btnPhoto.setNeedsDisplay()
     }
 }

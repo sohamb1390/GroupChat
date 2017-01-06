@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		442BCFD81E1BE44700ED0B26 /* image.png in Resources */ = {isa = PBXBuildFile; fileRef = 442BCFD71E1BE44700ED0B26 /* image.png */; };
 		4473D0561E1B60BB0060EAE4 /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4473D0551E1B60BB0060EAE4 /* NetworkHandler.swift */; };
+		449110741E1F78C7000AEFD2 /* PopupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449110731E1F78C7000AEFD2 /* PopupController.swift */; };
+		449110771E1F78F5000AEFD2 /* UserProfilePopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449110751E1F78F5000AEFD2 /* UserProfilePopupViewController.swift */; };
+		449110781E1F78F5000AEFD2 /* UserProfilePopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 449110761E1F78F5000AEFD2 /* UserProfilePopupViewController.xib */; };
 		449E6BBA1E1E2B74001F16C1 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449E6BB91E1E2B74001F16C1 /* ChatViewController.swift */; };
 		44A806EF1E10EC3D00B5924E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A806EE1E10EC3D00B5924E /* AppDelegate.swift */; };
 		44A806F41E10EC3D00B5924E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44A806F21E10EC3D00B5924E /* Main.storyboard */; };
@@ -54,6 +57,9 @@
 		441943C91E124E030084F886 /* GroupChat-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GroupChat-Bridging-Header.h"; sourceTree = "<group>"; };
 		442BCFD71E1BE44700ED0B26 /* image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image.png; sourceTree = "<group>"; };
 		4473D0551E1B60BB0060EAE4 /* NetworkHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkHandler.swift; sourceTree = "<group>"; };
+		449110731E1F78C7000AEFD2 /* PopupController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupController.swift; sourceTree = "<group>"; };
+		449110751E1F78F5000AEFD2 /* UserProfilePopupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfilePopupViewController.swift; sourceTree = "<group>"; };
+		449110761E1F78F5000AEFD2 /* UserProfilePopupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserProfilePopupViewController.xib; sourceTree = "<group>"; };
 		449E6BB91E1E2B74001F16C1 /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		44A806EB1E10EC3D00B5924E /* GroupChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GroupChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		44A806EE1E10EC3D00B5924E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -182,6 +188,8 @@
 				44A807211E10EF5300B5924E /* GroupsTableViewController.swift */,
 				44A807231E10EF6C00B5924E /* AddGroupViewController.swift */,
 				44A8072C1E111D8D00B5924E /* SignInSignUpViewController.swift */,
+				449110751E1F78F5000AEFD2 /* UserProfilePopupViewController.swift */,
+				449110761E1F78F5000AEFD2 /* UserProfilePopupViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -206,6 +214,7 @@
 		44A807271E10F51D00B5924E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				449110731E1F78C7000AEFD2 /* PopupController.swift */,
 				442BCFD71E1BE44700ED0B26 /* image.png */,
 				44A807281E10F53000B5924E /* GoogleService-Info.plist */,
 			);
@@ -367,6 +376,7 @@
 				442BCFD81E1BE44700ED0B26 /* image.png in Resources */,
 				44A806F91E10EC3D00B5924E /* LaunchScreen.storyboard in Resources */,
 				44A807291E10F53000B5924E /* GoogleService-Info.plist in Resources */,
+				449110781E1F78F5000AEFD2 /* UserProfilePopupViewController.xib in Resources */,
 				44A806F61E10EC3D00B5924E /* Assets.xcassets in Resources */,
 				44A806F41E10EC3D00B5924E /* Main.storyboard in Resources */,
 			);
@@ -533,8 +543,10 @@
 			files = (
 				44D5A8ED1E151FC700F070B2 /* GroupChatConstants.swift in Sources */,
 				4473D0561E1B60BB0060EAE4 /* NetworkHandler.swift in Sources */,
+				449110771E1F78F5000AEFD2 /* UserProfilePopupViewController.swift in Sources */,
 				449E6BBA1E1E2B74001F16C1 /* ChatViewController.swift in Sources */,
 				44ADAFD21E166FEF00278F30 /* RoundBorderedBlurView.swift in Sources */,
+				449110741E1F78C7000AEFD2 /* PopupController.swift in Sources */,
 				44D5A8F01E15200B00F070B2 /* GroupChatViewModel.swift in Sources */,
 				44A807221E10EF5300B5924E /* GroupsTableViewController.swift in Sources */,
 				44A806EF1E10EC3D00B5924E /* AppDelegate.swift in Sources */,
