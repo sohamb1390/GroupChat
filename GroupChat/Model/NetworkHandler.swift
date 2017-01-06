@@ -3,8 +3,6 @@
 //  GroupChat
 //
 //  Created by Soham Bhattacharjee on 03/01/17.
-//  Copyright © 2017 IBM. All rights reserved.
-//
 
 import Foundation
 import UIKit

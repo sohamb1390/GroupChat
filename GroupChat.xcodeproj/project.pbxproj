@@ -629,7 +629,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -704,14 +704,14 @@
 			baseConfigurationReference = 59588D69D50898CCB003EAD6 /* Pods-GroupChat.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Soham Bhattacharjee (Q32T8QSE7N)";
+				CODE_SIGN_IDENTITY = "";
 				DEVELOPMENT_TEAM = 2T4GPBYKK8;
 				INFOPLIST_FILE = GroupChat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodlion.test;
+				PRODUCT_BUNDLE_IDENTIFIER = com.soham.groupChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "744aa24a-7360-4704-8e9a-7badcdcfb112";
-				PROVISIONING_PROFILE_SPECIFIER = WildcardFoodLion;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "GroupChat-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
@@ -722,15 +722,15 @@
 			baseConfigurationReference = 68752CC1A1021E5A3DEB70C3 /* Pods-GroupChat.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Soham Bhattacharjee (Q32T8QSE7N)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Soham Bhattacharjee (Q32T8QSE7N)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEVELOPMENT_TEAM = 2T4GPBYKK8;
 				INFOPLIST_FILE = GroupChat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodlion.test;
+				PRODUCT_BUNDLE_IDENTIFIER = com.soham.groupChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "744aa24a-7360-4704-8e9a-7badcdcfb112";
-				PROVISIONING_PROFILE_SPECIFIER = WildcardFoodLion;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "GroupChat-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
