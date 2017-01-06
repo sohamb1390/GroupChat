@@ -12,13 +12,12 @@ target 'GroupChat' do
   pod 'Firebase/Database'
   pod 'Firebase/Crash'
   pod 'Firebase/Storage'
-  pod 'RxSwift',    '~> 3.0'
-  pod 'RxCocoa',    '~> 3.0'
   pod 'JSQMessagesViewController'
   pod 'KRProgressHUD'
   pod 'SwiftMessages'
   pod 'OpinionzAlertView'
   pod 'JJMaterialTextField'
+  pod 'PopupDialog', '~> 0.5'
   target 'GroupChatTests' do
     inherit! :search_paths
     # Pods for testing

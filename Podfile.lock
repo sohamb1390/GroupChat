@@ -71,9 +71,7 @@ PODS:
   - JSQSystemSoundPlayer (2.0.1)
   - KRProgressHUD (2.1.0)
   - OpinionzAlertView (0.3.1)
-  - RxCocoa (3.0.1):
-    - RxSwift (~> 3.0)
-  - RxSwift (3.0.1)
+  - PopupDialog (0.5.0)
   - SwiftMessages (3.1.1)
 
 DEPENDENCIES:
@@ -87,8 +85,7 @@ DEPENDENCIES:
   - JSQMessagesViewController
   - KRProgressHUD
   - OpinionzAlertView
-  - RxCocoa (~> 3.0)
-  - RxSwift (~> 3.0)
+  - PopupDialog (~> 0.5)
   - SwiftMessages
 
 SPEC CHECKSUMS:
@@ -110,10 +107,9 @@ SPEC CHECKSUMS:
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   KRProgressHUD: c3a59d192ffe1d470efe2525217f0d3aab06418d
   OpinionzAlertView: 213cf7fa544091962ebd9526ff2e7e120b13c149
-  RxCocoa: 15a52fc590dcc700cb4a690a633b5c5184ce3a78
-  RxSwift: af5680055c4ad04480189c52d28385b1029493a6
+  PopupDialog: 9890441b81105b9076757af2afe2b037be682f3e
   SwiftMessages: 1216ea6bdf8d92ff0f6f98a23e5442711b1e71ac
 
-PODFILE CHECKSUM: 064a279c331e80d01207999d14b73a76e6667f31
+PODFILE CHECKSUM: 7261c89514aefd342c4fcc5587fcd65f7c62f228
 
 COCOAPODS: 1.1.1

@@ -64,12 +64,7 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>RxCocoa.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>RxSwift.xcscheme</key>
+		<key>PopupDialog.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -92,17 +87,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>17D2FE2591DA5E5EAC31B89876F3BCA3</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>201337153C0C95176DE1051D044FA2FA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>436A874D3E1027A6491D67DB30DB1B17</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>4D932E7AADC51AC6F8870775F30A2CD1</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>557CEDB1070E69D52139942842B38D68</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -117,6 +112,11 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>8D2B95FFDF166AD5BB0761CBBEF2EE79</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>A57D69BCA10D0E09DCABD63F16C9C0C2</key>
 		<dict>
 			<key>primary</key>
@@ -127,17 +127,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>B7F512AB9C81853DF53B1D4FCE756DD9</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>C052BEBFBD0AB5218CC64BA3450F6547</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>C366E9E23E09640A4037C2DB020E88A2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C4689F6085D0062BD46DE0FFA28EB4E2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -153,16 +153,6 @@
 			<true/>
 		</dict>
 		<key>D0581AF7BF4A6DA140D280B19ECC7BFF</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>DC2B380062F703B538CAFF2EB23C8AF0</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>EFC2E84904E4513298728AD9E2A24D9F</key>
 		<dict>
 			<key>primary</key>
 			<true/>

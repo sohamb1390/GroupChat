@@ -10,6 +10,8 @@ import UIKit
 import JSQMessagesViewController
 import Firebase
 import FirebaseStorage
+import MobileCoreServices
+
 class ChatViewController: JSQMessagesViewController {
 
     // MARK: Variables
@@ -75,6 +77,10 @@ class ChatViewController: JSQMessagesViewController {
         
         // Observe messages
         observeMessages()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.isNavigationBarHidden = false
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -212,7 +218,15 @@ class ChatViewController: JSQMessagesViewController {
         }
         messages = tempChatMessages
     }
-
+    private func handleCameraControl(type: UIImagePickerControllerSourceType) {
+        let picker = UIImagePickerController()
+        picker.allowsEditing = true
+        picker.delegate = self
+        picker.sourceType = type
+        picker.mediaTypes = [kUTTypeImage as String]
+        present(picker, animated: true, completion: nil)
+    }
+    
     override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
         
         // Create a chat
@@ -223,7 +237,21 @@ class ChatViewController: JSQMessagesViewController {
         JSQSystemSoundPlayer.jsq_playMessageSentSound() // 4
     }
     override func didPressAccessoryButton(_ sender: UIButton!) {
-        
+        let actionSheet = UIAlertController(title: "Media", message: "Select your option", preferredStyle: .actionSheet)
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            actionSheet.addAction(UIAlertAction(title: "Open Camera", style: .default, handler: { action in
+                self.handleCameraControl(type: .camera)
+            }))
+        }
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+            actionSheet.addAction(UIAlertAction(title: "Open Library", style: .default, handler: { action in
+                self.handleCameraControl(type: .photoLibrary)
+            }))
+        }
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+            actionSheet.dismiss(animated: true, completion: nil)
+        }))
+        present(actionSheet, animated: true, completion: nil)
     }
     
     // MARK: - JSQMessageController UICollectionView delegates
@@ -318,4 +346,8 @@ class ChatViewController: JSQMessagesViewController {
         isTyping = textView.text != ""
     }
 }
-
+extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+    }
+}

@@ -91,8 +91,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/JSQSystemSoundPlayer/JSQSystemSoundPlayer.framework"
   install_framework "$BUILT_PRODUCTS_DIR/KRProgressHUD/KRProgressHUD.framework"
   install_framework "$BUILT_PRODUCTS_DIR/OpinionzAlertView/OpinionzAlertView.framework"
-  install_framework "$BUILT_PRODUCTS_DIR/RxCocoa/RxCocoa.framework"
-  install_framework "$BUILT_PRODUCTS_DIR/RxSwift/RxSwift.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/PopupDialog/PopupDialog.framework"
   install_framework "$BUILT_PRODUCTS_DIR/SwiftMessages/SwiftMessages.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
@@ -103,7 +102,6 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/JSQSystemSoundPlayer/JSQSystemSoundPlayer.framework"
   install_framework "$BUILT_PRODUCTS_DIR/KRProgressHUD/KRProgressHUD.framework"
   install_framework "$BUILT_PRODUCTS_DIR/OpinionzAlertView/OpinionzAlertView.framework"
-  install_framework "$BUILT_PRODUCTS_DIR/RxCocoa/RxCocoa.framework"
-  install_framework "$BUILT_PRODUCTS_DIR/RxSwift/RxSwift.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/PopupDialog/PopupDialog.framework"
   install_framework "$BUILT_PRODUCTS_DIR/SwiftMessages/SwiftMessages.framework"
 fi

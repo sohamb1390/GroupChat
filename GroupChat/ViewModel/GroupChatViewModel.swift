@@ -46,7 +46,6 @@ class GroupChatViewModel {
     var ref: FIRDatabaseReference?
     var currentUser: FIRUser?
     var firebaseAuth: FIRAuth?
-    var fireDatabase: FIRDatabase?
     var storageReference: FIRStorageReference?
     
     // Singleton
@@ -60,11 +59,8 @@ class GroupChatViewModel {
     required init() {
         ref = FIRDatabase.database().reference()
         
-        // Offline capabilities
-        fireDatabase = FIRDatabase.database()
-        fireDatabase!.persistenceEnabled = true
         ref!.keepSynced(true)
-        
+
         firebaseAuth = FIRAuth.auth()
         currentUser = firebaseAuth?.currentUser
         storageReference = FIRStorage.storage().reference(forURL: URLConstants.storageURL)
@@ -141,7 +137,12 @@ class GroupChatViewModel {
             completionHandler(nil ,error)
             return
         }
-        FireBaseHandler.signIn(fireAuth: firebaseAuth ,userEmail: userEmail, password: password, completionHandler: completionHandler)
+        FireBaseHandler.signIn(fireAuth: firebaseAuth, userEmail: userEmail, password: password) { (user, error) in
+            if error == nil {
+                self.currentUser = firebaseAuth.currentUser
+            }
+            completionHandler(user, error)
+        }
     }
     func signUp(userName: String, userEmail: String, password: String, userImage: UIImage?, completionHandler: @escaping (_ user: FIRUser?, _ error: Error?) -> Void) {
         guard let firebaseAuth = FIRAuth.auth() else {
@@ -156,8 +157,12 @@ class GroupChatViewModel {
             completionHandler(nil, error)
             return
         }
-
-        FireBaseHandler.signUp(fireAuth: firebaseAuth, databaseRef: databaseRef, storageRef: storageRef, userName: userName, userEmail: userEmail, password: password, userImage: userImage, completionHandler: completionHandler)
+        FireBaseHandler.signUp(fireAuth: firebaseAuth, databaseRef: databaseRef, storageRef: storageRef, userName: userName, userEmail: userEmail, password: password, userImage: userImage) { (user, error) in
+            if error == nil {
+                self.currentUser = firebaseAuth.currentUser
+            }
+            completionHandler(user, error)
+        }
     }
     func signOut(completionHandler: @escaping(_ error: Error?) -> Void) {
         guard let firebaseAuth = FIRAuth.auth() else {
@@ -166,6 +171,8 @@ class GroupChatViewModel {
         }
         do {
             try firebaseAuth.signOut()
+            // Removing the existing user
+            currentUser = nil
             completionHandler(nil)
         } catch let signOutError as NSError {
             print ("Error signing out: %@", signOutError)

@@ -8,8 +8,6 @@
 
 import UIKit
 import Firebase
-import RxSwift
-import RxCocoa
 import MobileCoreServices
 import OpinionzAlertView
 import JJMaterialTextField
@@ -113,7 +111,6 @@ class SignInSignUpViewController: UIViewController {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
-        navigationController?.isNavigationBarHidden = true
         navigationItem.hidesBackButton = true
         
         // Initialise View Model
@@ -136,6 +133,7 @@ class SignInSignUpViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.isNavigationBarHidden = true
         btnPhoto.isHidden = btnSignInSignUp.tag == 1
     }
     override func viewWillDisappear(_ animated: Bool) {
@@ -302,12 +300,12 @@ class SignInSignUpViewController: UIViewController {
         let actionSheet = UIAlertController(title: "Choose your option", message: "", preferredStyle: .actionSheet)
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             actionSheet.addAction(UIAlertAction(title: "Open Camera", style: .default, handler: { action in
-                self.openCamera()
+                self.handleCameraControl(type: .camera)
             }))
         }
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             actionSheet.addAction(UIAlertAction(title: "Open Library", style: .default, handler: { action in
-                self.openLibrary()
+                self.handleCameraControl(type: .photoLibrary)
             }))
         }
         if btnPhoto.imageView?.image != nil {
@@ -321,14 +319,11 @@ class SignInSignUpViewController: UIViewController {
         }))
         present(actionSheet, animated: true, completion: nil)
     }
-    private func openCamera() {
-        
-    }
-    private func openLibrary() {
+    private func handleCameraControl(type: UIImagePickerControllerSourceType) {
         let picker = UIImagePickerController()
         picker.allowsEditing = true
         picker.delegate = self
-        picker.sourceType = .photoLibrary
+        picker.sourceType = type
         picker.mediaTypes = [kUTTypeImage as String]
         present(picker, animated: true, completion: nil)
     }
