@@ -154,7 +154,7 @@ class ChatViewController: JSQMessagesViewController {
                 
                 // 5
                 self.finishReceivingMessage(animated: true)
-            } else if let id = messageData["chatUserID"] as String!, let photoURL = messageData["mediaURL"] as String!, let name = messageData["chatSenderName"] as String! {
+            } else if let id = messageData["chatUserID"] as String!, let photoURL = messageData["mediaURL"] as String!, !photoURL.isEmpty, let name = messageData["chatSenderName"] as String! {
                 
                 // 2
                 if let mediaItem = JSQPhotoMediaItem(maskAsOutgoing: id == self.senderId) {

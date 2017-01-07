@@ -19,15 +19,14 @@ class SignInSignUpViewController: UIViewController {
     
     // MARK: IBOutlets
     @IBOutlet weak var btnSignInSignUp: UIButton!
-    @IBOutlet weak var btnPhoto: UIButton! {
+    @IBOutlet weak var profileImageView: UIImageView! {
         didSet {
-            btnPhoto.clipsToBounds = true
-            btnPhoto.layer.cornerRadius = btnPhoto.frame.size.width / 2.0
-            btnPhoto.layer.borderColor = UIColor.white.cgColor
-            btnPhoto.layer.borderWidth = 2.0
-            btnPhoto.layer.masksToBounds = true
+            profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2.0
+            profileImageView.layer.borderColor = UIColor.white.cgColor
+            profileImageView.layer.borderWidth = 2.0
         }
     }
+    @IBOutlet weak var btnPhoto: UIButton!
     
     @IBOutlet weak var signInUserEmailTextField: JJMaterialTextfield! {
         didSet {
@@ -108,6 +107,9 @@ class SignInSignUpViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        btnPhoto.isHidden = btnSignInSignUp.tag == 1
+        profileImageView.isHidden = btnSignInSignUp.tag == 1
+
         // Do any additional setup after loading the view.
         navigationItem.hidesBackButton = true
         
@@ -132,7 +134,6 @@ class SignInSignUpViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.isNavigationBarHidden = true
-        btnPhoto.isHidden = btnSignInSignUp.tag == 1
     }
     override func viewWillDisappear(_ animated: Bool) {
         if UIDevice().screenType == .iPhone5 || UIDevice().screenType == .iPhone4 {
@@ -221,6 +222,8 @@ class SignInSignUpViewController: UIViewController {
     // MARK: Private implementations
     private func changeState() {
         btnPhoto.isHidden = currentMode == .SignIn
+        profileImageView.isHidden = currentMode == .SignIn
+
         btnSignInSignUp.setTitle(currentMode == .SignIn ? "Don't have an account?" : "Already have an account?", for: .normal)
         
         // Clear textField for Sign Up/ Sign In
@@ -275,7 +278,7 @@ class SignInSignUpViewController: UIViewController {
         // Creating the User using Email & Password
         UIApplication.shared.showNetworkLoader(messageText: "Signing Up")
 
-        viewModel!.signUp(userName: uName, userEmail: email, password: pwd, userImage: btnPhoto.imageView?.image, completionHandler: { (user: FIRUser?, error: Error?) in
+        viewModel!.signUp(userName: uName, userEmail: email, password: pwd, userImage: profileImageView.image, completionHandler: { (user: FIRUser?, error: Error?) in
             UIApplication.shared.hideNetworkLoader()
             if let err = error {
                 print("Error Info: \(err.localizedDescription)")
@@ -306,10 +309,10 @@ class SignInSignUpViewController: UIViewController {
                 self.handleCameraControl(type: .photoLibrary)
             }))
         }
-        if btnPhoto.accessibilityValue != nil {
+        if profileImageView.accessibilityValue != nil {
             actionSheet.addAction(UIAlertAction(title: "Delete Photo", style: .destructive, handler: { action in
-                self.btnPhoto.setImage(UIImage(named: "defaultImage"), for: .normal)
-                self.btnPhoto.accessibilityValue = nil
+                self.profileImageView.image = UIImage(named: "defaultImage")
+                self.profileImageView.accessibilityValue = nil
             }))
         }
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
@@ -322,34 +325,37 @@ class SignInSignUpViewController: UIViewController {
         picker.allowsEditing = true
         picker.delegate = self
         picker.sourceType = type
-        picker.mediaTypes = [kUTTypeImage as String]
         present(picker, animated: true, completion: nil)
     }
 }
 // MARK: - UIImagePickerController delegate
 extension SignInSignUpViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
-            print(image.size)
-            self.setProfileImage(image: image)
+        picker.dismiss(animated: true) {
+            if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
+                print(image.size)
+                self.setProfileImage(image: image)
+            } else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+                print(image.size)
+                self.setProfileImage(image: image)
+            }
         }
-        else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            print(image.size)
-            self.setProfileImage(image: image)
-        }
-        picker.dismiss(animated: true) {}
     }
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
     }
     private func setProfileImage(image: UIImage) {
-        let newImage = image.resizedImageWithinRect(rectSize: CGSize(width: 200.0, height: 200.0))
+        var newImage = image
+        if image.size.width > 200.0 {
+            newImage = image.imageWithImage(sourceImage: image, scaledToWidth: 200.0)
+        }
         print(newImage.size)
-        btnPhoto.setImage(newImage, for: .normal)
-        btnPhoto.accessibilityValue = "Image"
-        btnPhoto.setNeedsDisplay()
+        self.profileImageView.image = image
+        profileImageView.accessibilityValue = "Image"
     }
 }
+
 // MARK: - Keyboard Listeners
 extension SignInSignUpViewController {
     func keyboardAppeared(notification: NSNotification) {
