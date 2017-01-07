@@ -23,3 +23,6 @@ and most importantly Firebase 4.0 pod
 
 I have tried to use the MVVM pattern in this project as I am totally new into this. Please feel free to contact me over the mail
 (sohamb.1390@gmail.com) if you see any mistakes. I am always happy to learn from you. :)
+
+
+[![Sign In Screen](https://github.com/sohamb1390/GroupChat/blob/master/Simulator%20Screen%20Shot%2008-Jan-2017%2C%2012.22.43%20AM.png)](#features)
