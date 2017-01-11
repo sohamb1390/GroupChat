@@ -29,3 +29,12 @@ I have tried to use the MVVM pattern in this project as I am totally new into th
 [![Sign Up Screen](https://github.com/sohamb1390/GroupChat/blob/master/Simulator%20Screen%20Shot%2008-Jan-2017%2C%2012.22.45%20AM.png)](#features)
 [![Group List Screen](https://github.com/sohamb1390/GroupChat/blob/master/Simulator%20Screen%20Shot%2008-Jan-2017%2C%2012.23.01%20AM.png)](#features)
 [![Chat Screen](https://github.com/sohamb1390/GroupChat/blob/master/UNADJUSTEDNONRAW_thumb_8b.jpg)](#features)
+
+
+If you want to use it in your personal project the you have to do the following things:
+1. CREATE A FIREBASE IOS APP IN YOUR OWN FIREBASE ACCOUNT USING THE APP NAME, BUNDLE ID.
+2. YOU WILL GET A GOOGLESERVICES.PLIST FILE ONCE YOU COMPLETE YOUR PROJECT SETUP ON FIREBASE.
+3. REPLACE THE EXISTING GOOGLESERVICES.PLIAT FILE WITH THE NEW ONE
+4. CHANGE THE APP NAME AND BUNDLE ID ACCORDING TO YOUR NEWLY CREATED PROJECT.
+5. CHANGE THE FIRSTORAGE URL.
+6. HAPPY CODING 
