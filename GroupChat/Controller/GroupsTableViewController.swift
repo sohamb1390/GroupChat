@@ -143,12 +143,20 @@ class GroupsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let grpModel = groupsArray[indexPath.row]
-            viewModel.removeGroup(grouphildName: "Groups", groupID: grpModel.groupID!, chatChildName: "Chat", completionHandler: { (error, ref) in
-                if error == nil {
-                    self.groupsArray.remove(at: indexPath.row)
-                    tableView.deleteRows(at: [indexPath], with: .fade)
+
+            // Show alert for deleting group
+            let alertView = OpinionzAlertView(title: "Delete \(grpModel.groupName!)", message: "Do you really want to delete this group?", cancelButtonTitle: "No", otherButtonTitles: ["Yes"], usingBlockWhenTapButton: { (alertView, index) in
+                if index == 1 {
+                    self.viewModel.removeGroup(grouphildName: "Groups", groupID: grpModel.groupID!, chatChildName: "Chat", completionHandler: { (error, ref) in
+                        if error == nil {
+                            self.groupsArray.remove(at: indexPath.row)
+                            tableView.deleteRows(at: [indexPath], with: .fade)
+                        }
+                    })
                 }
             })
+            alertView?.iconType = OpinionzAlertIconWarning
+            alertView?.show()
         }
     }
     
@@ -235,7 +243,7 @@ extension GroupsTableViewController {
                                 self.performSegue(withIdentifier: SegueConstants.addGroupScreenSegue, sender: self)
                             }
                         })
-                        alertView?.iconType = OpinionzAlertIconWarning
+                        alertView?.iconType = OpinionzAlertIconInfo
                         alertView?.show()
                     }
                     else {
