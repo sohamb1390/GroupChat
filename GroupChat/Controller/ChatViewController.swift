@@ -28,7 +28,6 @@ class ChatViewController: JSQMessagesViewController {
     private lazy var messageRef: FIRDatabaseReference = {
         return self.getMessageRefrence()
     }()
-    private var newMessageRefHandle: FIRDatabaseHandle?
     private lazy var cache: NSCache<AnyObject, AnyObject> = {
         return NSCache()
     }()
@@ -56,6 +55,7 @@ class ChatViewController: JSQMessagesViewController {
     
     private var loggedInUsersArray: [FIRUser] = []
     private var updatedMessageRefHandle: FIRDatabaseHandle?
+    private var newMessageRefHandle: FIRDatabaseHandle?
     private var messages = [JSQMessage]()
     private var photoMessageMap = [String: JSQPhotoMediaItem]()
     var imageDictArray = [[String: Any]]()
@@ -72,7 +72,7 @@ class ChatViewController: JSQMessagesViewController {
             title = senderDisplayName
         }
         
-        collectionView.collectionViewLayout.springinessEnabled = true
+        //collectionView.collectionViewLayout.springinessEnabled = true
         
         // automatically scrolls down if new message came
         automaticallyScrollsToMostRecentMessage = true
@@ -112,6 +112,12 @@ class ChatViewController: JSQMessagesViewController {
         scrollToBottom(animated: true)
     }
     override func viewWillDisappear(_ animated: Bool) {
+//        if let refHandle = newMessageRefHandle {
+//            messageRef.removeObserver(withHandle: refHandle)
+//        }
+//        if let refHandle = updatedMessageRefHandle {
+//            messageRef.removeObserver(withHandle: refHandle)
+//        }
         super.viewWillDisappear(animated)
     }
     override func didReceiveMemoryWarning() {
@@ -190,7 +196,13 @@ class ChatViewController: JSQMessagesViewController {
             if let photoURL = messageData["mediaURL"] as String! { // 2
                 // The photo has been updated.
                 if let mediaItem = self.photoMessageMap[key] { // 3
-                    self.fetchImageDataAtURL(photoURL, forMediaItem: mediaItem, clearsPhotoMessageMapOnSuccessForKey: key) // 4
+                    self.fetchImageDataAtURL(photoURL, forMediaItem: mediaItem, clearsPhotoMessageMapOnSuccessForKey: key)
+                }
+                else {
+                    if let id = messageData["chatUserID"] as String!, let mediaItem = JSQPhotoMediaItem(maskAsOutgoing: id == self.senderId), let name = messageData["chatSenderName"] as String! {
+                        self.addPhotoMessage(withId: id, key: snapshot.key, displayName: name, mediaItem: mediaItem)
+                        self.fetchImageDataAtURL(photoURL, forMediaItem: mediaItem, clearsPhotoMessageMapOnSuccessForKey: nil)
+                    }
                 }
             }
         })
@@ -269,7 +281,7 @@ class ChatViewController: JSQMessagesViewController {
         var tempChatMessages = messages
         for (index, message) in tempChatMessages.enumerated() {
             if message.senderId == deletedChatSenderId {
-                tempChatMessages.remove(at: index)
+                tempChatMessages.remove(at: index - 1)
             }
         }
         messages = tempChatMessages
@@ -292,6 +304,9 @@ class ChatViewController: JSQMessagesViewController {
                     return
                 }
                 // 4
+                // Stop Status Bar network loader
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                
                 mediaItem.image = UIImage(data: data!)
                 self.collectionView.reloadData()
                 
@@ -378,6 +393,8 @@ class ChatViewController: JSQMessagesViewController {
         var data = NSData()
         data = UIImageJPEGRepresentation(image, 1.0)! as NSData
 
+        // Start Status bar loader
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         viewModel.createChat(groupID: groupID!, chatChildName: "Chat", senderName: senderDisplayName, mediaName: imageName, chatMessage: "", chatDateTime: Date(), mediaType: .Picture, mediaData: data as Data) { (error) in
             self.finishSendingMessage(animated: true)
         }
