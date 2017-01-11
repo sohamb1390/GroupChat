@@ -13,7 +13,7 @@ class GroupsTableViewController: UITableViewController {
     
     // MARK: Variables
     var groupsArray: [GroupModel] = []
-    let viewModel: GroupChatViewModel = GroupChatViewModel.sharedInstance
+    let viewModel: GroupChatViewModel = (UIApplication.shared.delegate as! AppDelegate).groupModel!
     var selectedGroupModel: GroupModel?
     
     override func viewDidLoad() {

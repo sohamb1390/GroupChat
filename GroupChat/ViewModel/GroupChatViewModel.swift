@@ -46,9 +46,6 @@ class GroupChatViewModel {
     var firebaseAuth: FIRAuth?
     var storageReference: FIRStorageReference?
     
-    // Singleton
-    static let sharedInstance = GroupChatViewModel()
-    
     // Some dummy error for few scenarios
     lazy var error: NSError = {
         return NSError(domain: "", code: 0, userInfo: [:])
@@ -56,9 +53,7 @@ class GroupChatViewModel {
     
     required init() {
         ref = FIRDatabase.database().reference()
-        
         ref!.keepSynced(true)
-
         firebaseAuth = FIRAuth.auth()
         currentUser = firebaseAuth?.currentUser
         storageReference = FIRStorage.storage().reference(forURL: URLConstants.storageURL)

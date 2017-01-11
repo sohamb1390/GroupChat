@@ -100,7 +100,7 @@ class SignInSignUpViewController: UIViewController {
 
     
     // MARK: Variables
-    var viewModel: GroupChatViewModel?
+    private var viewModel: GroupChatViewModel?
     var currentMode: Mode = .SignIn
     
     // MARK: - Lifecycle
@@ -113,8 +113,8 @@ class SignInSignUpViewController: UIViewController {
         // Do any additional setup after loading the view.
         navigationItem.hidesBackButton = true
         
-        // Initialise View Model
-        viewModel = GroupChatViewModel()
+        // Initialisation
+        viewModel = (UIApplication.shared.delegate as! AppDelegate).groupModel!
         
         // Token Refresh
         UIApplication.shared.showNetworkLoader(messageText: "Existing Session")
@@ -257,7 +257,7 @@ class SignInSignUpViewController: UIViewController {
                 else {
                     let alertView = OpinionzAlertView(title: "Email is not verified", message: "Please accept the verification mail that has been sent to your email id: \(email). Please verify your mail before proceeding. If you didn't recieve the mail, please send it again.", cancelButtonTitle: "Cancel", otherButtonTitles: ["Send Again"], usingBlockWhenTapButton: { (alertView, index) in
                         
-                        self.viewModel?.resendVerificationMail(completionHandler: { error in
+                        self.viewModel!.resendVerificationMail(completionHandler: { error in
                             guard let _ = error else {
                                 self.showAlert(title: "Unable to send Verification Mail", message: "We are unable to send the verification mail to your email id, please try again later", notiType: .error)
                                 return

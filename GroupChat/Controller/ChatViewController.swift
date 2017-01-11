@@ -16,7 +16,7 @@ class ChatViewController: JSQMessagesViewController {
     // MARK: Variables
     var selectedGroupModel: GroupModel?
     private var btnUserProfile: UIButton?
-    private let viewModel: GroupChatViewModel = GroupChatViewModel.sharedInstance
+    private let viewModel: GroupChatViewModel = (UIApplication.shared.delegate as! AppDelegate).groupModel!
     private var groupID: String? {
         get {
             if selectedGroupModel != nil {
@@ -71,6 +71,8 @@ class ChatViewController: JSQMessagesViewController {
         else {
             title = senderDisplayName
         }
+        
+        collectionView.collectionViewLayout.springinessEnabled = true
         
         // automatically scrolls down if new message came
         automaticallyScrollsToMostRecentMessage = true
