@@ -234,8 +234,9 @@ extension GroupsTableViewController {
                                 var password = innerDict["password"]
                                 
                                 // Decrypt Password
-                                password = password!.aesDecrypt(key: grpName!, iv: password!)
-                                
+                                if !password!.isEmpty {
+                                    password = password!.aesDecrypt(key: grpName!, iv: password!)
+                                }
                                 let grpModel = GroupModel(id: groupID, grpName: grpName ?? "", grpPassword: password ?? "")
                                 self.groupsArray.append(grpModel)
                             }

@@ -85,7 +85,10 @@ class GroupChatViewModel {
         }
         
         // Encrypting the group Password by AES Encryption
-        let encryptedPassword = password.aesEncrypt(key: groupName, iv: password)
+        var encryptedPassword = password
+        if !password.isEmpty {
+            encryptedPassword = password.aesEncrypt(key: groupName, iv: password)
+        }
         FireBaseHandler.addGroup(ref: databaseRef, groupChildName: groupChildName, groupName: groupName, password: encryptedPassword, completionHandler: completionHandler)
     }
     // MARK: Get Group ID
