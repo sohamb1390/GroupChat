@@ -28,6 +28,27 @@ class FireBaseHandler: NSObject {
             completionHandler(databaseRef.key, error)
         }
     }
+    // MARK: Remove Group and corresponding group chat
+    class func removeGroup(databaseRef: FIRDatabaseReference, grouphildName: String, groupID: String, chatChildName: String, completionHandler: @escaping(_ error: Error?, _ ref: FIRDatabaseReference?) -> Void) {
+        // First remove the group
+        databaseRef.child(grouphildName).child(groupID).removeValue { (error, ref) in
+            if error == nil {
+                // Now delete the corresponding chat child
+                databaseRef.child(chatChildName).observeSingleEvent(of: .value, with: { (snapshot) in
+                    if snapshot.hasChild(groupID) {
+                        databaseRef.child(chatChildName).child(groupID).removeValue(completionBlock: completionHandler)
+                    }
+                    else {
+                        completionHandler(error, ref)
+                    }
+                })
+            }
+            else {
+                completionHandler(error, ref)
+            }
+        }
+    }
+    
     // MARK: Token Refresh
     class func tokenRefresh(user: FIRUser, completionHandler: @escaping (_ error: Error?) -> Void) {
         user.getTokenForcingRefresh(true) { (idToken, error) in

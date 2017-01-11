@@ -31,11 +31,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GroupChat/Model/FireBaseHandler.swift"
-            timestampString = "505394643.632798"
+            timestampString = "505827524.221526"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "44"
-            endingLineNumber = "44"
+            startingLineNumber = "65"
+            endingLineNumber = "65"
             landmarkName = "getUserStatusNetworkStatus(completionHandler:)"
             landmarkType = "7">
          </BreakpointContent>

@@ -91,6 +91,14 @@ class GroupChatViewModel {
         }
         FireBaseHandler.addGroup(ref: databaseRef, groupChildName: groupChildName, groupName: groupName, password: encryptedPassword, completionHandler: completionHandler)
     }
+    // MARK: Remove Group and corresponding Chat
+    func removeGroup(grouphildName: String, groupID: String, chatChildName: String, completionHandler: @escaping(_ error: Error?, _ ref: FIRDatabaseReference?) -> Void) {
+        guard let databaseRef = ref else {
+            completionHandler(error, nil)
+            return
+        }
+        FireBaseHandler.removeGroup(databaseRef: databaseRef, grouphildName: grouphildName, groupID: groupID, chatChildName: chatChildName, completionHandler: completionHandler)
+    }
     // MARK: Get Group ID
     func getGroupID(groupName: String) -> String? {
         guard let databaseRef = ref else {

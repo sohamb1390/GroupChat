@@ -137,6 +137,21 @@ class GroupsTableViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let grpModel = groupsArray[indexPath.row]
+            viewModel.removeGroup(grouphildName: "Groups", groupID: grpModel.groupID!, chatChildName: "Chat", completionHandler: { (error, ref) in
+                if error == nil {
+                    self.groupsArray.remove(at: indexPath.row)
+                    tableView.deleteRows(at: [indexPath], with: .fade)
+                }
+            })
+        }
+    }
+    
     /*
      // Override to support conditional editing of the table view.
      override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
