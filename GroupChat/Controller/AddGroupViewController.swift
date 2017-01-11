@@ -15,6 +15,8 @@ import SwiftMessages
 class AddGroupViewController: UIViewController {
     
     // MARK: IBOutlets
+    @IBOutlet weak var yConstraint: NSLayoutConstraint!
+
     @IBOutlet weak var pwdTextField: UITextField! {
         didSet {
             pwdTextField.isSecureTextEntry = true
@@ -35,7 +37,11 @@ class AddGroupViewController: UIViewController {
             groupNameTextField.returnKeyType = .next
         }
     }
-    @IBOutlet weak var topConstraint: NSLayoutConstraint!
+    @IBOutlet weak var passwordSwitch: UISwitch! {
+        didSet {
+            passwordSwitch.setOn(false, animated: true)
+        }
+    }
     
     // MARK: Variables
     let viewModel = GroupChatViewModel()
@@ -48,16 +54,53 @@ class AddGroupViewController: UIViewController {
         
         // Do any additional setup after loading the view.
         title = "Create Group"
+        yConstraint.constant = view.frame.size.height
+        
+//        let encrypt = title!.aesEncrypt(key: "key", iv: title!)
+//        let decrypt = title!.aesDecrypt(key: "key", iv: encrypt)
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
     
     // MARK: - Action
     @IBAction func cancel(sender: UIButton) {
         dismiss(animated: true, completion: nil)
+    }
+    @IBAction func onChangeSwitchState(_ sender: UISwitch) {
+        sender.setOn(!sender.isOn, animated: true)
+        pwdTextField.text = ""
+        retypePwdTextField.text = ""
+        self.yConstraint.constant = sender.isOn ? -40.0 : self.view.frame.size.height
+        UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.3, initialSpringVelocity: 5.0, options: UIViewAnimationOptions.curveLinear, animations: {
+            self.view.layoutIfNeeded()
+        }) { (animated) in
+        }
+    }
+    @IBAction func addGroup(_ sender: UIButton) {
+        guard let groupName = groupNameTextField.text, !groupName.isEmpty else {
+            groupNameTextField.shake()
+            groupNameTextField.becomeFirstResponder()
+            return
+        }
+        if passwordSwitch.isOn {
+            guard let pass = pwdTextField.text, !pass.isEmpty, pass.characters.count >= 6 else {
+                pwdTextField.shake()
+                pwdTextField.becomeFirstResponder()
+                return
+            }
+            guard let rePass = retypePwdTextField.text, !rePass.isEmpty, rePass.characters.count >= 6, rePass == pass else {
+                retypePwdTextField.shake()
+                retypePwdTextField.becomeFirstResponder()
+                return
+            }
+        }
+        addGroup()
     }
 }
 extension AddGroupViewController: UITextFieldDelegate {
@@ -69,21 +112,15 @@ extension AddGroupViewController: UITextFieldDelegate {
                 textField.becomeFirstResponder()
                 return true
             }
-            pwdTextField.becomeFirstResponder()
+            if passwordSwitch.isOn {
+                pwdTextField.becomeFirstResponder()
+            }
         }
         else if textField.tag == 2 {
             guard let text = textField.text, !text.isEmpty, text.characters.count >= 6 else {
                 textField.shake()
                 textField.becomeFirstResponder()
                 return true
-            }
-            // show the retype password textfield
-            if topConstraint.constant != 0.0 {
-                topConstraint.constant = 20.0
-                retypePwdTextField.isHidden = false
-                UIView.animate(withDuration: 0.5, animations: {
-                    self.view.layoutIfNeeded()
-                })
             }
             retypePwdTextField.becomeFirstResponder()
         }
@@ -113,7 +150,7 @@ extension AddGroupViewController {
                 self.showAlert(title: "Unable to add your group", message: "Group name already exists", notiType: .error)
             }
             else {
-                self.viewModel.addGroup(groupChildName: "Groups", groupName: self.groupNameTextField.text!, password: self.retypePwdTextField.text!, completionHandler: { (groupID, error) in
+                self.viewModel.addGroup(groupChildName: "Groups", groupName: self.groupNameTextField.text!, password: self.retypePwdTextField.text ?? "", completionHandler: { (groupID, error) in
                     UIApplication.shared.hideNetworkLoader()
                     if let err = error {
                         self.showAlert(title: "Unable to add your group", message: FirebaseError.getErrorDesc(error: err), notiType: .error)

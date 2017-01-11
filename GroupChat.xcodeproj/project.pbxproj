@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		442BCFD81E1BE44700ED0B26 /* image.png in Resources */ = {isa = PBXBuildFile; fileRef = 442BCFD71E1BE44700ED0B26 /* image.png */; };
 		4473D0561E1B60BB0060EAE4 /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4473D0551E1B60BB0060EAE4 /* NetworkHandler.swift */; };
+		448B8F051E263BD7007DF49E /* FBEncryptorAES.m in Sources */ = {isa = PBXBuildFile; fileRef = 448B8F021E263BD7007DF49E /* FBEncryptorAES.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		448B8F061E263BD7007DF49E /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 448B8F041E263BD7007DF49E /* NSData+Base64.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		449110741E1F78C7000AEFD2 /* PopupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449110731E1F78C7000AEFD2 /* PopupController.swift */; };
 		449110771E1F78F5000AEFD2 /* UserProfilePopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449110751E1F78F5000AEFD2 /* UserProfilePopupViewController.swift */; };
 		449110781E1F78F5000AEFD2 /* UserProfilePopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 449110761E1F78F5000AEFD2 /* UserProfilePopupViewController.xib */; };
@@ -55,8 +56,11 @@
 		216B1FEC6B943B027111808F /* Pods-GroupChatTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GroupChatTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GroupChatTests/Pods-GroupChatTests.debug.xcconfig"; sourceTree = "<group>"; };
 		355EE7F59F2E8BDAE9B2BB71 /* Pods_GroupChatTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GroupChatTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		441943C91E124E030084F886 /* GroupChat-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GroupChat-Bridging-Header.h"; sourceTree = "<group>"; };
-		442BCFD71E1BE44700ED0B26 /* image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image.png; sourceTree = "<group>"; };
 		4473D0551E1B60BB0060EAE4 /* NetworkHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkHandler.swift; sourceTree = "<group>"; };
+		448B8F011E263BD7007DF49E /* FBEncryptorAES.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBEncryptorAES.h; sourceTree = "<group>"; };
+		448B8F021E263BD7007DF49E /* FBEncryptorAES.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBEncryptorAES.m; sourceTree = "<group>"; };
+		448B8F031E263BD7007DF49E /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
+		448B8F041E263BD7007DF49E /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		449110731E1F78C7000AEFD2 /* PopupController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupController.swift; sourceTree = "<group>"; };
 		449110751E1F78F5000AEFD2 /* UserProfilePopupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfilePopupViewController.swift; sourceTree = "<group>"; };
 		449110761E1F78F5000AEFD2 /* UserProfilePopupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserProfilePopupViewController.xib; sourceTree = "<group>"; };
@@ -120,6 +124,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		448B8F001E263BD7007DF49E /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				448B8F011E263BD7007DF49E /* FBEncryptorAES.h */,
+				448B8F021E263BD7007DF49E /* FBEncryptorAES.m */,
+				448B8F031E263BD7007DF49E /* NSData+Base64.h */,
+				448B8F041E263BD7007DF49E /* NSData+Base64.m */,
+			);
+			path = Security;
+			sourceTree = "<group>";
+		};
 		44A806E21E10EC3D00B5924E = {
 			isa = PBXGroup;
 			children = (
@@ -214,8 +229,8 @@
 		44A807271E10F51D00B5924E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				448B8F001E263BD7007DF49E /* Security */,
 				449110731E1F78C7000AEFD2 /* PopupController.swift */,
-				442BCFD71E1BE44700ED0B26 /* image.png */,
 				44A807281E10F53000B5924E /* GoogleService-Info.plist */,
 			);
 			name = Resources;
@@ -373,7 +388,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				44A807261E10EF8D00B5924E /* AddGroup.storyboard in Resources */,
-				442BCFD81E1BE44700ED0B26 /* image.png in Resources */,
 				44A806F91E10EC3D00B5924E /* LaunchScreen.storyboard in Resources */,
 				44A807291E10F53000B5924E /* GoogleService-Info.plist in Resources */,
 				449110781E1F78F5000AEFD2 /* UserProfilePopupViewController.xib in Resources */,
@@ -543,10 +557,12 @@
 			files = (
 				44D5A8ED1E151FC700F070B2 /* GroupChatConstants.swift in Sources */,
 				4473D0561E1B60BB0060EAE4 /* NetworkHandler.swift in Sources */,
+				448B8F061E263BD7007DF49E /* NSData+Base64.m in Sources */,
 				449110771E1F78F5000AEFD2 /* UserProfilePopupViewController.swift in Sources */,
 				449E6BBA1E1E2B74001F16C1 /* ChatViewController.swift in Sources */,
 				44ADAFD21E166FEF00278F30 /* RoundBorderedBlurView.swift in Sources */,
 				449110741E1F78C7000AEFD2 /* PopupController.swift in Sources */,
+				448B8F051E263BD7007DF49E /* FBEncryptorAES.m in Sources */,
 				44D5A8F01E15200B00F070B2 /* GroupChatViewModel.swift in Sources */,
 				44A807221E10EF5300B5924E /* GroupsTableViewController.swift in Sources */,
 				44A806EF1E10EC3D00B5924E /* AppDelegate.swift in Sources */,
@@ -712,6 +728,7 @@
 				DEVELOPMENT_TEAM = 2T4GPBYKK8;
 				INFOPLIST_FILE = GroupChat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.foodlion.groupChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "744aa24a-7360-4704-8e9a-7badcdcfb112";
@@ -731,6 +748,7 @@
 				DEVELOPMENT_TEAM = 2T4GPBYKK8;
 				INFOPLIST_FILE = GroupChat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.foodlion.groupChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "744aa24a-7360-4704-8e9a-7badcdcfb112";

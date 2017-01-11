@@ -94,3 +94,11 @@ extension UIImage {
         return newImage!
     }
 }
+extension String {
+    func aesEncrypt(key: String, iv: String) -> String{
+        return FBEncryptorAES.encryptBase64String(iv, keyString: key, separateLines: false)
+    }
+    func aesDecrypt(key: String, iv: String) -> String {
+        return FBEncryptorAES.decryptBase64String(iv, keyString: key)
+    }
+}

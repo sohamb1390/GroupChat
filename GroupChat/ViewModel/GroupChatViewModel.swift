@@ -83,7 +83,10 @@ class GroupChatViewModel {
             completionHandler(nil, error)
             return
         }
-        FireBaseHandler.addGroup(ref: databaseRef, groupChildName: groupChildName, groupName: groupName, password: password, completionHandler: completionHandler)
+        
+        // Encrypting the group Password by AES Encryption
+        let encryptedPassword = password.aesEncrypt(key: groupName, iv: password)
+        FireBaseHandler.addGroup(ref: databaseRef, groupChildName: groupChildName, groupName: groupName, password: encryptedPassword, completionHandler: completionHandler)
     }
     // MARK: Get Group ID
     func getGroupID(groupName: String) -> String? {
