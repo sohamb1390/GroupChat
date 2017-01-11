@@ -123,7 +123,7 @@ class FireBaseHandler: NSObject {
                         // Metadata contains file metadata such as size, content-type, and download URL.
                         if let downloadURL = metadata.downloadURL() {
                             // Update the existing Chat
-                            ref.child(chatChildName).child(groupID).child(databaseRef.key).observe(.value, with: { (snapshot) in
+                            ref.child(chatChildName).child(groupID).child(databaseRef.key).observeSingleEvent(of: .value, with: { (snapshot) in
                                 if var dict = snapshot.value as? [String: Any] {
                                     dict["mediaURL"] = downloadURL.absoluteString
                                     ref.child(chatChildName).child(groupID).child(databaseRef.key).setValue(dict)
