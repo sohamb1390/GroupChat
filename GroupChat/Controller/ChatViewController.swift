@@ -11,6 +11,9 @@ import FirebaseStorage
 import MobileCoreServices
 import Photos
 
+class Message: JSQMessage {
+    var messageId: String?
+}
 class ChatViewController: JSQMessagesViewController {
 
     // MARK: Variables
@@ -56,7 +59,9 @@ class ChatViewController: JSQMessagesViewController {
     private var loggedInUsersArray: [FIRUser] = []
     private var updatedMessageRefHandle: FIRDatabaseHandle?
     private var newMessageRefHandle: FIRDatabaseHandle?
-    private var messages = [JSQMessage]()
+    private var removedMessageRefHandle: FIRDatabaseHandle?
+
+    private var messages = [Message]()
     private var photoMessageMap = [String: JSQPhotoMediaItem]()
     var imageDictArray = [[String: Any]]()
     
@@ -82,12 +87,13 @@ class ChatViewController: JSQMessagesViewController {
         
         // Observe users
         //observeUsers()
+        
+        // Observer Messages
+        observeMessages()
+
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        // Observe messages
-        observeMessages()
         
         navigationController?.isNavigationBarHidden = false
     }
@@ -113,16 +119,6 @@ class ChatViewController: JSQMessagesViewController {
         scrollToBottom(animated: true)
     }
     override func viewWillDisappear(_ animated: Bool) {
-        messages = []
-        photoMessageMap = [:]
-        loggedInUsersArray = []
-        if let refHandle = newMessageRefHandle {
-            messageRef.removeObserver(withHandle: refHandle)
-            newMessageRefHandle = nil
-        }
-        if let refHandle = updatedMessageRefHandle {
-            messageRef.removeObserver(withHandle: refHandle)
-        }
         super.viewWillDisappear(animated)
     }
     override func didReceiveMemoryWarning() {
@@ -142,7 +138,23 @@ class ChatViewController: JSQMessagesViewController {
         btnUserProfile!.layer.borderWidth = 1.0
         btnUserProfile!.layer.masksToBounds = true
         
+        let leftMenuItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(back))
+        
+        navigationItem.setLeftBarButton(leftMenuItem, animated: false);
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: btnUserProfile!)
+    }
+    
+    func back() {
+        if let refHandle = newMessageRefHandle {
+            messageRef.removeObserver(withHandle: refHandle)
+        }
+        if let refHandle = updatedMessageRefHandle {
+            messageRef.removeObserver(withHandle: refHandle)
+        }
+        if let refHandle = removedMessageRefHandle {
+            messageRef.removeObserver(withHandle: refHandle)
+        }
+        _ = navigationController?.popViewController(animated: true)
     }
     
     // MARK: - Observer
@@ -156,13 +168,13 @@ class ChatViewController: JSQMessagesViewController {
         newMessageRefHandle = messageQuery.observe(.childAdded, with: { (snapshot) -> Void in
             // 3
             let messageData = snapshot.value as! Dictionary<String, String>
-            
+            let key =  snapshot.key
             if let id = messageData["chatUserID"] as String!, let name = messageData["chatSenderName"] as String!, let text = messageData["chatMessage"] as String!, let dateTime = messageData["chatDateTime"] as String!, text.characters.count > 0 {
                 // 4
                 
                 // Decrypting a chat using AES
                 let decryptedChat = text.aesDecrypt(key: id, iv: text)
-                self.addMessage(withId: id, name: name, text: decryptedChat, dateTimeString: dateTime)
+                self.addMessage(withId: id, name: name, text: decryptedChat, dateTimeString: dateTime, chatId: key)
                 
                 // 5
                 self.finishReceivingMessage(animated: true)
@@ -171,7 +183,7 @@ class ChatViewController: JSQMessagesViewController {
                 // 2
                 if let mediaItem = JSQPhotoMediaItem(maskAsOutgoing: id == self.senderId) {
                     // 3
-                    self.addPhotoMessage(withId: id, key: snapshot.key, displayName: name, mediaItem: mediaItem)
+                    self.addPhotoMessage(withId: id, key: snapshot.key, displayName: name, mediaItem: mediaItem, chatId: key)
                     // 4
 //                    if photoURL.hasPrefix("gs://") {
 //                        self.fetchImageDataAtURL(photoURL, forMediaItem: mediaItem, clearsPhotoMessageMapOnSuccessForKey: nil)
@@ -184,10 +196,10 @@ class ChatViewController: JSQMessagesViewController {
             }
         })
         
-        newMessageRefHandle = messageQuery.observe(.childRemoved, with: { (snapshot) -> Void in
+        removedMessageRefHandle = messageQuery.observe(.childRemoved, with: { (snapshot) -> Void in
             let messageData = snapshot.value as! Dictionary<String, String>
             if let id = messageData["chatUserID"] {
-                self.removeMessage(DeletedChatId: id)
+                self.removeMessage(DeletedChatId: id, ChatKey: snapshot.key)
                 self.finishReceivingMessage()
             } else {
                 print("Error! Could not decode message data")
@@ -204,7 +216,7 @@ class ChatViewController: JSQMessagesViewController {
                 }
                 else {
                     if let id = messageData["chatUserID"] as String!, let mediaItem = JSQPhotoMediaItem(maskAsOutgoing: id == self.senderId), let name = messageData["chatSenderName"] as String! {
-                        self.addPhotoMessage(withId: id, key: snapshot.key, displayName: name, mediaItem: mediaItem)
+                        self.addPhotoMessage(withId: id, key: snapshot.key, displayName: name, mediaItem: mediaItem, chatId: key)
                         self.fetchImageDataAtURL(photoURL, forMediaItem: mediaItem, clearsPhotoMessageMapOnSuccessForKey: nil)
                     }
                 }
@@ -256,24 +268,28 @@ class ChatViewController: JSQMessagesViewController {
     private func reloadMessagesView() {
         collectionView?.reloadData()
     }
-    private func addMessage(withId id: String, name: String, text: String, dateTimeString: String) {
+    private func addMessage(withId id: String, name: String, text: String, dateTimeString: String, chatId: String) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .medium
         let dateTime = dateFormatter.date(from: dateTimeString)
+
         if dateTime == nil {
-            if let message = JSQMessage.init(senderId: id, displayName: name, text: text) {
+            if let message = Message(senderId: id, displayName: name, text: text) {
+                message.messageId = chatId
                 messages.append(message)
             }
         }
         else {
-            if let message = JSQMessage(senderId: id, senderDisplayName: name, date: dateTime, text: text) {
+            if let message = Message(senderId: id, senderDisplayName: name, date: dateTime, text: text) {
+                message.messageId = chatId
                 messages.append(message)
             }
         }
     }
-    private func addPhotoMessage(withId id: String, key: String, displayName: String, mediaItem: JSQPhotoMediaItem) {
-        if let message = JSQMessage(senderId: id, displayName: displayName, media: mediaItem) {
+    private func addPhotoMessage(withId id: String, key: String, displayName: String, mediaItem: JSQPhotoMediaItem, chatId: String) {
+        if let message = Message(senderId: id, displayName: displayName, media: mediaItem) {
+            message.messageId = chatId
             messages.append(message)
             if (mediaItem.image == nil) {
                 photoMessageMap[key] = mediaItem
@@ -281,11 +297,12 @@ class ChatViewController: JSQMessagesViewController {
             collectionView.reloadData()
         }
     }
-    private func removeMessage(DeletedChatId deletedChatSenderId: String) {
+    private func removeMessage(DeletedChatId deletedChatSenderId: String, ChatKey chatId: String) {
         var tempChatMessages = messages
         for (index, message) in tempChatMessages.enumerated() {
-            if message.senderId == deletedChatSenderId {
-                tempChatMessages.remove(at: index - 1)
+            if message.senderId == deletedChatSenderId, message.messageId == chatId {
+                tempChatMessages.remove(at: index)
+                break
             }
         }
         messages = tempChatMessages
