@@ -130,17 +130,9 @@ class ChatViewController: JSQMessagesViewController {
         // Dispose of any resources that can be recreated.
     }
     deinit {
-        messages = []
-        photoMessageMap = [:]
-        loggedInUsersArray = []
-        if let refHandle = newMessageRefHandle {
-            messageRef.removeObserver(withHandle: refHandle)
-            newMessageRefHandle = nil
-        }
-        if let refHandle = updatedMessageRefHandle {
-            messageRef.removeObserver(withHandle: refHandle)
-        }
+        // deinit will never get called for ViewControllers
     }
+    
     // MARK: - Customise UI
     func customiseUI() {
         btnUserProfile = UIButton(type: .custom)
@@ -167,7 +159,10 @@ class ChatViewController: JSQMessagesViewController {
             
             if let id = messageData["chatUserID"] as String!, let name = messageData["chatSenderName"] as String!, let text = messageData["chatMessage"] as String!, let dateTime = messageData["chatDateTime"] as String!, text.characters.count > 0 {
                 // 4
-                self.addMessage(withId: id, name: name, text: text, dateTimeString: dateTime)
+                
+                // Decrypting a chat using AES
+                let decryptedChat = text.aesDecrypt(key: id, iv: text)
+                self.addMessage(withId: id, name: name, text: decryptedChat, dateTimeString: dateTime)
                 
                 // 5
                 self.finishReceivingMessage(animated: true)
@@ -372,7 +367,11 @@ class ChatViewController: JSQMessagesViewController {
         
         // Create a chat
         isTyping = false
-        viewModel.createChat(groupID: groupID!, chatChildName: "Chat", senderName: senderDisplayName, mediaName: nil, chatMessage: text, chatDateTime: date!, mediaType: .Text, mediaData: nil, completionHandler: { (error) in
+        
+        // Encrypting a chat using AES
+        let encryptedChat = text.aesEncrypt(key: senderId, iv: text)
+        
+        viewModel.createChat(groupID: groupID!, chatChildName: "Chat", senderName: senderDisplayName, mediaName: nil, chatMessage: encryptedChat, chatDateTime: date!, mediaType: .Text, mediaData: nil, completionHandler: { (error) in
             self.finishSendingMessage(animated: true)
         })
         JSQSystemSoundPlayer.jsq_playMessageSentSound() // 4
@@ -515,6 +514,8 @@ class ChatViewController: JSQMessagesViewController {
         isTyping = textView.text != ""
     }
 }
+
+// MARK: - UIImagePickerController Handlers
 extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         picker.dismiss(animated: true, completion:nil)
