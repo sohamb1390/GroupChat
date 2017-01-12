@@ -80,14 +80,15 @@ class ChatViewController: JSQMessagesViewController {
         // Customise UI
         customiseUI()
         
-        // Observe messages
-        observeMessages()
-        
         // Observe users
-        observeUsers()
+        //observeUsers()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        // Observe messages
+        observeMessages()
+        
         navigationController?.isNavigationBarHidden = false
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -112,12 +113,16 @@ class ChatViewController: JSQMessagesViewController {
         scrollToBottom(animated: true)
     }
     override func viewWillDisappear(_ animated: Bool) {
-//        if let refHandle = newMessageRefHandle {
-//            messageRef.removeObserver(withHandle: refHandle)
-//        }
-//        if let refHandle = updatedMessageRefHandle {
-//            messageRef.removeObserver(withHandle: refHandle)
-//        }
+        messages = []
+        photoMessageMap = [:]
+        loggedInUsersArray = []
+        if let refHandle = newMessageRefHandle {
+            messageRef.removeObserver(withHandle: refHandle)
+            newMessageRefHandle = nil
+        }
+        if let refHandle = updatedMessageRefHandle {
+            messageRef.removeObserver(withHandle: refHandle)
+        }
         super.viewWillDisappear(animated)
     }
     override func didReceiveMemoryWarning() {
@@ -125,8 +130,12 @@ class ChatViewController: JSQMessagesViewController {
         // Dispose of any resources that can be recreated.
     }
     deinit {
+        messages = []
+        photoMessageMap = [:]
+        loggedInUsersArray = []
         if let refHandle = newMessageRefHandle {
             messageRef.removeObserver(withHandle: refHandle)
+            newMessageRefHandle = nil
         }
         if let refHandle = updatedMessageRefHandle {
             messageRef.removeObserver(withHandle: refHandle)
