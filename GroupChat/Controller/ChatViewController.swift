@@ -102,16 +102,22 @@ class ChatViewController: JSQMessagesViewController {
         
         // Download the user image and set it
         if btnUserProfile?.accessibilityValue == nil {
-            viewModel.getUserPhoto(databaseReference: viewModel.ref, childName: "users", loggedInUser: viewModel.currentUser?.uid, completionHandler: { (image) in
-                OperationQueue.main.addOperation({ 
-                    if let img = image {
-                        self.btnUserProfile?.setImage(img, for: .normal)
-                        self.btnUserProfile?.accessibilityValue = "Image"
-                    }
-                    else {
-                        self.btnUserProfile?.setImage(UIImage.init(named: "defaultImage"), for: .normal)
-                    }
-                })
+            guard let currentUser = viewModel.currentUser else {
+                return
+            }
+            let fetchUserPhotoStruct = fetchMedia(ref: viewModel.ref, childName: "users", userID: currentUser.uid)
+            
+            fetchUserPhotoStruct.getUserPhoto(completionHandler: { [weak self] (image: UIImage?) -> Void in
+                weak var weakSelf = self
+                if weakSelf == nil { return }
+                
+                if let img = image {
+                    weakSelf!.btnUserProfile?.setImage(img, for: .normal)
+                    weakSelf!.btnUserProfile?.accessibilityValue = "Image"
+                }
+                else {
+                    weakSelf!.btnUserProfile?.setImage(UIImage.init(named: "defaultImage"), for: .normal)
+                }
             })
         }
         observeTyping()
@@ -159,7 +165,7 @@ class ChatViewController: JSQMessagesViewController {
     
     // MARK: - Observer
     private func observeMessages() {
-        messageRef = viewModel.ref!.child("Chat").child(groupID!)
+        messageRef = viewModel.ref.child("Chat").child(groupID!)
         // 1.
         let messageQuery = messageRef.queryOrderedByKey() //messageRef.queryLimited(toLast:25)
         
@@ -250,12 +256,12 @@ class ChatViewController: JSQMessagesViewController {
     
     // MARK: - Chat Controls
     private func getMessageRefrence() -> FIRDatabaseReference {
-        let messageRef = viewModel.ref!.child("Chat").child(groupID!)
+        let messageRef = viewModel.ref.child("Chat").child(groupID!)
         messageRef.keepSynced(true)
         return messageRef
     }
     private func getRef() -> FIRDatabaseReference {
-        return viewModel.ref!
+        return viewModel.ref
     }
     private func setupOutgoingBubble() -> JSQMessagesBubbleImage {
         let bubbleImageFactory = JSQMessagesBubbleImageFactory()
@@ -381,17 +387,37 @@ class ChatViewController: JSQMessagesViewController {
         
     }
     override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
-        
+        guard let currentUser = viewModel.currentUser else {
+            return
+        }
+
         // Create a chat
         isTyping = false
         
         // Encrypting a chat using AES
         let encryptedChat = text.aesEncrypt(key: senderId, iv: text)
         
-        viewModel.createChat(groupID: groupID!, chatChildName: "Chat", senderName: senderDisplayName, mediaName: nil, chatMessage: encryptedChat, chatDateTime: date!, mediaType: .Text, mediaData: nil, completionHandler: { (error) in
-            self.finishSendingMessage(animated: true)
-        })
+        // Create a new chat
+        // 1. First create the chat model structure
+        let chatModel = Chat(senderID: currentUser.uid, message: encryptedChat, mediaType: .Text, dateTime: date, mediaData: nil)
+        
+        // 2. Create the "New Chat Create Structure"
+        let createChatStruct = CreateChat(groupID: groupID!, chatChildName: "Chat", senderName: senderDisplayName, chatDetails: chatModel, mediaName: nil, ref: viewModel.ref, storageRef: viewModel.storageReference, fireAuth: viewModel.firebaseAuth)
+        
+        // 3. Trigger Firebase for sending this chat
+        createChatStruct.triggerFirebase { [weak self] (groupID: String?, error: Error?, user: FIRUser?, ref: FIRDatabaseReference?, snap: FIRDataSnapshot?) -> Void in
+            
+            weak var weakSelf = self
+            if weakSelf == nil { return }
+            
+            weakSelf!.finishSendingMessage(animated: true)
+        }
         JSQSystemSoundPlayer.jsq_playMessageSentSound() // 4
+        
+//        viewModel.createChat(groupID: groupID!, chatChildName: "Chat", senderName: senderDisplayName, mediaName: nil, chatMessage: encryptedChat, chatDateTime: date!, mediaType: .Text, mediaData: nil, completionHandler: { (error) in
+//            self.finishSendingMessage(animated: true)
+//        })
+//        JSQSystemSoundPlayer.jsq_playMessageSentSound() // 4
     }
     override func didPressAccessoryButton(_ sender: UIButton!) {
         let actionSheet = UIAlertController(title: "Media", message: "Select your option", preferredStyle: .actionSheet)
@@ -412,6 +438,10 @@ class ChatViewController: JSQMessagesViewController {
     }
     
     func sendPictureMessage(image: UIImage, imageName: String) {
+        
+        guard let currentUser = viewModel.currentUser else {
+            return
+        }
         // Create a picture chat
         isTyping = false
         
@@ -420,10 +450,29 @@ class ChatViewController: JSQMessagesViewController {
 
         // Start Status bar loader
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        viewModel.createChat(groupID: groupID!, chatChildName: "Chat", senderName: senderDisplayName, mediaName: imageName, chatMessage: "", chatDateTime: Date(), mediaType: .Picture, mediaData: data as Data) { (error) in
-            self.finishSendingMessage(animated: true)
+        
+        // Create a new chat
+        // 1. First create the chat model structure
+        let chatModel = Chat(senderID: currentUser.uid, message: nil, mediaType: .Picture, dateTime: Date(), mediaData: data as Data)
+        
+        // 2. Create the "New Chat Create Structure"
+        let createChatStruct = CreateChat(groupID: groupID!, chatChildName: "Chat", senderName: senderDisplayName, chatDetails: chatModel, mediaName: imageName, ref: viewModel.ref, storageRef: viewModel.storageReference, fireAuth: viewModel.firebaseAuth)
+        
+        // 3. Trigger Firebase for sending this chat
+        createChatStruct.triggerFirebase { [weak self] (groupID: String?, error: Error?, user: FIRUser?, ref: FIRDatabaseReference?, snap: FIRDataSnapshot?) -> Void in
+            
+            weak var weakSelf = self
+            if weakSelf == nil { return }
+            
+            weakSelf!.finishSendingMessage(animated: true)
         }
         JSQSystemSoundPlayer.jsq_playMessageSentSound() // 4
+
+        
+//        viewModel.createChat(groupID: groupID!, chatChildName: "Chat", senderName: senderDisplayName, mediaName: imageName, chatMessage: "", chatDateTime: Date(), mediaType: .Picture, mediaData: data as Data) { (error) in
+//            self.finishSendingMessage(animated: true)
+//        }
+//        JSQSystemSoundPlayer.jsq_playMessageSentSound() // 4
     }
     
     // MARK: - JSQMessageController UICollectionView delegates
@@ -467,16 +516,20 @@ class ChatViewController: JSQMessagesViewController {
             print("Avatar is already downloaded, no need to download it")
         }
         else {
+            let fetchUserPhotoStruct = fetchMedia(ref: viewModel.ref, childName: "users", userID: message.senderId)
             
-            viewModel.getUserPhoto(databaseReference: viewModel.ref, childName: "users", loggedInUser: message.senderId, completionHandler: { (image) in
+            fetchUserPhotoStruct.getUserPhoto(completionHandler: { [weak self] (image: UIImage?) -> Void in
+                weak var weakSelf = self
+                if weakSelf == nil { return }
+                
                 if let img = image {
-                    // set image
-                    self.imageDictArray.append(["image": img,
-                                           "row": NSNumber.init(value: indexPath.row)])
-                    OperationQueue.main.addOperation({ 
+                    weakSelf!.imageDictArray.append(["image": img,
+                                                     "row": NSNumber(value: indexPath.row)])
+                    OperationQueue.main.addOperation({
                         cell.avatarImageView.image = JSQMessagesAvatarImageFactory.avatarImage(with: img, diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault)).avatarImage
-                        self.cache.setObject(img, forKey: indexPath.row as AnyObject)
+                        weakSelf!.cache.setObject(img, forKey: indexPath.row as AnyObject)
                     })
+                    
                 }
             })
         }

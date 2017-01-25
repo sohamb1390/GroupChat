@@ -117,14 +117,20 @@ class SignInSignUpViewController: UIViewController {
         viewModel = (UIApplication.shared.delegate as! AppDelegate).groupModel!
         
         // Token Refresh
-        UIApplication.shared.showNetworkLoader(messageText: "Existing Session")
-        
-        viewModel!.tokenRefresh { (error, isEmailVerified) in
-            UIApplication.shared.hideNetworkLoader()
-            if error == nil, isEmailVerified {
-                self.performSegue(withIdentifier: SegueConstants.groupListSegue, sender: self)
+        if viewModel!.currentUser != nil {
+            UIApplication.shared.showNetworkLoader(messageText: "Existing Session")
+            let tokenRefresh = RefreshToken(user: viewModel!.currentUser!)
+            tokenRefresh.tokenRefresh { (error: Error?, isEmailVerified: Bool) in
+                if error == nil, isEmailVerified {
+                    self.performSegue(withIdentifier: SegueConstants.groupListSegue, sender: self)
+                }
+                else {
+                    print("Couldn't load the previous session")
+                    UIApplication.shared.hideNetworkLoader()
+                }
             }
         }
+        
         // Register Keyboard observer only for smaller devices
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardAppeared(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDismissed(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -239,36 +245,51 @@ class SignInSignUpViewController: UIViewController {
         UIApplication.shared.showNetworkLoader(messageText: "Signing you In")
 
         // Sign In
-        viewModel!.signIn(userEmail: email, password: pwd) { (user: FIRUser?, error: Error?) in
+        let signInStruct = SignIn(userEmail: email, password: pwd, ref: viewModel!.ref, storageRef: viewModel!.storageReference, fireAuth: viewModel!.firebaseAuth)
+        signInStruct.triggerFirebase { [weak self] (groupID: String?, error: Error?, user: FIRUser?, ref: FIRDatabaseReference?, snap: FIRDataSnapshot?) -> Void in
             UIApplication.shared.hideNetworkLoader()
+            
+            weak var weakSelf = self
+            if weakSelf == nil { return }
+            
+            // Check if an error occured
             if let err = error {
-                print("Error Info: \(err.localizedDescription)")
+                print("Sign In Error: \(err.localizedDescription)")
                 let errorDesc = FirebaseError.getErrorDesc(error: err)
-                self.showAlert(title: "Unable to Sign In", message: errorDesc, notiType: .error)
-
+                weakSelf!.showAlert(title: "Unable to Sign In", message: errorDesc, notiType: .error)
+                return
+            }
+            // Check if user exists
+            if user == nil {
+                print("User not found")
+                weakSelf!.showAlert(title: "User not found", message: "We couldn't find a specific user for this email id", notiType: .error)
+                return
+            }
+            print("User Info: \(user.debugDescription)")
+            
+            // When email is verified
+            if user!.isEmailVerified {
+                // Navigating to Group List Screen
+                weakSelf!.performSegue(withIdentifier: SegueConstants.groupListSegue, sender: weakSelf!)
             }
             else {
-                print("User Info: \(user.debugDescription)")
-                // When email is verified
-                if user!.isEmailVerified {
-                    // Navigating to Group List Screen
-                    self.performSegue(withIdentifier: SegueConstants.groupListSegue, sender: self)
-                }
-                else {
+                OperationQueue.main.addOperation({ 
                     let alertView = OpinionzAlertView(title: "Email is not verified", message: "Please accept the verification mail that has been sent to your email id: \(email). Please verify your mail before proceeding. If you didn't recieve the mail, please send it again.", cancelButtonTitle: "Cancel", otherButtonTitles: ["Send Again"], usingBlockWhenTapButton: { (alertView, index) in
-                        
-                        self.viewModel!.resendVerificationMail(completionHandler: { error in
-                            guard let _ = error else {
-                                self.showAlert(title: "Unable to send Verification Mail", message: "We are unable to send the verification mail to your email id, please try again later", notiType: .error)
-                                return
-                            }
-                            self.showAlert(title: "Verification mail sent", message: "Please check your mail and verify your mail address and try to sign in", notiType: .success)
-                        })
+                        if index == 1 {
+                            signInStruct.resendVerificationMail(firebaseUser: user!, completionHandler: { error in
+                                if error != nil {
+                                    weakSelf?.showAlert(title: "Unable to send Verification Mail", message: "We are unable to send the verification mail to your email id, please try again later", notiType: .error)
+                                }
+                                else {
+                                    weakSelf?.showAlert(title: "Verification mail sent", message: "Please check your mail and verify your mail address and try to sign in", notiType: .success)
+                                }
+                            })
+                        }
                         
                     })
                     alertView?.iconType = OpinionzAlertIconWarning
                     alertView?.show()
-                }
+                })
             }
         }
     }
@@ -276,23 +297,29 @@ class SignInSignUpViewController: UIViewController {
 
         // Sign Up
         // Creating the User using Email & Password
-        UIApplication.shared.showNetworkLoader(messageText: "Signing Up")
 
-        viewModel!.signUp(userName: uName, userEmail: email, password: pwd, userImage: profileImageView.image, completionHandler: { (user: FIRUser?, error: Error?) in
+        UIApplication.shared.showNetworkLoader(messageText: "Signing Up")
+        
+        let signUpStruct = SignUp(userName: uName, userEmail: email, password: pwd, userImage: profileImageView.image, ref: viewModel!.ref, storageRef: viewModel!.storageReference, fireAuth: viewModel!.firebaseAuth)
+        signUpStruct.triggerFirebase { [weak self] (groupID: String?, error: Error?, user: FIRUser?, ref: FIRDatabaseReference?, snap: FIRDataSnapshot?) -> Void in
             UIApplication.shared.hideNetworkLoader()
+            
+            weak var weakSelf = self
+            if weakSelf == nil { return }
+            
             if let err = error {
                 print("Error Info: \(err.localizedDescription)")
                 let errorDesc = FirebaseError.getErrorDesc(error: err)
-                self.showAlert(title: "Unable to Sign Up", message: errorDesc, notiType: .error)
+                weakSelf!.showAlert(title: "Unable to Sign Up", message: errorDesc, notiType: .error)
             }
             else {
                 print("User Info: \(user.debugDescription)")
-                self.showAlert(title: "Verification mail sent", message: "Please check your mail and verify your mail address and try to sign in", notiType: .success)
+                weakSelf!.showAlert(title: "Verification mail sent", message: "Please check your mail and verify your mail address and try to sign in", notiType: .success)
                 
                 // Now revert back to Sign In UI
-                self.changeMode(sender: self.btnSignInSignUp)
+                weakSelf!.changeMode(sender: weakSelf!.btnSignInSignUp)
             }
-        })
+        }
     }
     
     

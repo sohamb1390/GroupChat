@@ -142,23 +142,34 @@ extension AddGroupViewController {
     // MARK: Add a new group
     func addGroup() {
         UIApplication.shared.showNetworkLoader(messageText: "Adding your group")
-
-        viewModel.checkGroupNameAlreadyExists(groupChildName: "Groups", currentGroupName: groupNameTextField.text!) { (doesExist) in
-            // Firebase reference found, now do the next checkings
-            if doesExist {
+        
+        // Add group structure
+        let checkExistingGroupStruct = CheckGroupName(groupChildName: "Groups", currentGroupName: groupNameTextField.text!, ref: viewModel.ref)
+        checkExistingGroupStruct.checkGroupNameAlreadyExists { [weak self] (found) -> Void in
+            weak var weakSelf = self
+            if weakSelf == nil { return }
+            
+            if found {
                 UIApplication.shared.hideNetworkLoader()
-                self.showAlert(title: "Unable to add your group", message: "Group name already exists", notiType: .error)
+                weakSelf!.showAlert(title: "Unable to add your group", message: "Group name already exists", notiType: .error)
             }
             else {
-                self.viewModel.addGroup(groupChildName: "Groups", groupName: self.groupNameTextField.text!, password: self.retypePwdTextField.text ?? "", completionHandler: { (groupID, error) in
+                let encryptedPassword = weakSelf!.retypePwdTextField.text!.aesEncrypt(key: weakSelf!.groupNameTextField.text!, iv: weakSelf!.retypePwdTextField.text!)
+                
+                let addGroupStruct = AddGroup(groupChildName: "Groups", groupName: weakSelf!.groupNameTextField.text!, groupPassword: encryptedPassword, ref: weakSelf!.viewModel.ref, storageRef: weakSelf!.viewModel.storageReference, fireAuth: weakSelf!.viewModel.firebaseAuth)
+                
+                // Creating a group
+                addGroupStruct.triggerFirebase(completionHandler: { (groupID: String?, error: Error?, user: FIRUser?, ref: FIRDatabaseReference?, snap: FIRDataSnapshot?) in
+                    
                     UIApplication.shared.hideNetworkLoader()
+                    
                     if let err = error {
-                        self.showAlert(title: "Unable to add your group", message: FirebaseError.getErrorDesc(error: err), notiType: .error)
+                        weakSelf!.showAlert(title: "Unable to add your group", message: FirebaseError.getErrorDesc(error: err), notiType: .error)
                     }
                     else {
-                        self.dismiss(animated: true, completion: {
-                            if self.delegate != nil {
-                                self.delegate?.loadUpdatedGroups()
+                        weakSelf!.dismiss(animated: true, completion: {
+                            if weakSelf!.delegate != nil {
+                                weakSelf!.delegate?.loadUpdatedGroups()
                             }
                         })
                     }

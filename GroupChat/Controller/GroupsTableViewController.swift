@@ -8,12 +8,15 @@ import UIKit
 import JSQMessagesViewController
 import OpinionzAlertView
 import SwiftMessages
+import Firebase
+import FirebaseDatabase
+import FirebaseStorage
 
 class GroupsTableViewController: UITableViewController {
     
     // MARK: Variables
     var groupsArray: [GroupModel] = []
-    let viewModel: GroupChatViewModel = (UIApplication.shared.delegate as! AppDelegate).groupModel!
+    var viewModel: GroupChatViewModel?
     var selectedGroupModel: GroupModel?
     
     override func viewDidLoad() {
@@ -27,6 +30,9 @@ class GroupsTableViewController: UITableViewController {
         navigationController?.isNavigationBarHidden = false
         tableView.tableFooterView = UIView()
         tableView.rowHeight = UITableViewAutomaticDimension
+        
+        viewModel = (UIApplication.shared.delegate as! AppDelegate).groupModel!
+        
         // Load groups
         loadGroups()
     }
@@ -51,13 +57,19 @@ class GroupsTableViewController: UITableViewController {
         performSegue(withIdentifier: SegueConstants.addGroupScreenSegue, sender: self)
     }
     @IBAction func signOut(sender: UIButton) {
-        viewModel.signOut { error in
+        // Sign Out
+        let signoutStruct = SignOut()
+        signoutStruct.signOut(firebaseAuth: viewModel!.firebaseAuth) { [weak self] (error: Error?) -> Void in
+            
+            weak var weakSelf = self
+            if weakSelf == nil { return }
+
             if error != nil {
                 print ("Error signing out: %@", error!)
-                self.showAlert(title: "Unable to sign out", message: error!.localizedDescription, notiType: .error)
+                weakSelf!.showAlert(title: "Unable to sign out", message: error!.localizedDescription, notiType: .error)
             }
             else {
-                self.popToSignInSignOutScreen()
+                weakSelf!.popToSignInSignOutScreen()
             }
         }
     }
@@ -145,11 +157,18 @@ class GroupsTableViewController: UITableViewController {
             let grpModel = groupsArray[indexPath.row]
 
             // Show alert for deleting group
-            let alertView = OpinionzAlertView(title: "Delete \(grpModel.groupName!)", message: "Do you really want to delete this group?", cancelButtonTitle: "No", otherButtonTitles: ["Yes"], usingBlockWhenTapButton: { (alertView, index) in
+            let alertView = OpinionzAlertView(title: "Delete \(grpModel.groupName!)", message: "Do you really want to delete this group?", cancelButtonTitle: "No", otherButtonTitles: ["Yes"], usingBlockWhenTapButton: { [weak self] (alertView, index) -> Void in
+                
+                weak var weakSelf = self
+                if weakSelf == nil { return }
+
                 if index == 1 {
-                    self.viewModel.removeGroup(grouphildName: "Groups", groupID: grpModel.groupID!, chatChildName: "Chat", completionHandler: { (error, ref) in
+                    // Remove Group
+                    let removeGroupStruct = RemoveGroup(groupChildName: "Groups", groupID: grpModel.groupID!, chatChildName: "Chat", ref: weakSelf!.viewModel!.ref, storageRef: weakSelf!.viewModel!.storageReference, fireAuth: weakSelf!.viewModel!.firebaseAuth)
+                    
+                    removeGroupStruct.triggerFirebase(completionHandler: { (groupID: String?, error: Error?, user: FIRUser?, ref: FIRDatabaseReference?, snap: FIRDataSnapshot?) in
                         if error == nil {
-                            self.groupsArray.remove(at: indexPath.row)
+                            weakSelf!.groupsArray.remove(at: indexPath.row)
                             tableView.deleteRows(at: [indexPath], with: .fade)
                         }
                     })
@@ -160,43 +179,7 @@ class GroupsTableViewController: UITableViewController {
         }
     }
     
-    /*
-     // Override to support conditional editing of the table view.
-     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the specified item to be editable.
-     return true
-     }
-     */
-    
-    /*
-     // Override to support editing the table view.
-     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-     if editingStyle == .delete {
-     // Delete the row from the data source
-     tableView.deleteRows(at: [indexPath], with: .fade)
-     } else if editingStyle == .insert {
-     // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-     }
-     }
-     */
-    
-    /*
-     // Override to support rearranging the table view.
-     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-     
-     }
-     */
-    
-    /*
-     // Override to support conditional rearranging of the table view.
-     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the item to be re-orderable.
-     return true
-     }
-     */
-    
     // MARK: - Navigation
-    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
@@ -205,9 +188,10 @@ class GroupsTableViewController: UITableViewController {
             vc.delegate = self
         }
         else if segue.identifier == SegueConstants.chatScreenSegue, let vc = segue.destination as? ChatViewController {
-            if let currentUser = viewModel.currentUser, let displayName = currentUser.displayName {
+            let currentUser = viewModel!.currentUser
+            if let displayName = currentUser?.displayName {
                 vc.senderDisplayName = displayName
-                vc.senderId = currentUser.uid
+                vc.senderId = currentUser?.uid
                 vc.selectedGroupModel = selectedGroupModel
             }
         }
@@ -227,45 +211,55 @@ extension GroupsTableViewController {
     func loadGroups() {
         UIApplication.shared.showNetworkLoader(messageText: "Fetching your groups")
         
-        viewModel.loadGroups(groupChildName: "Groups") { (snapshot, error) in
+        // fetch Groups
+        let loadGroupsStruct = LoadGroup(groupChildName: "Groups", ref: viewModel!.ref, storageRef: viewModel!.storageReference, fireAuth: viewModel!.firebaseAuth)
+        loadGroupsStruct.triggerFirebase { [weak self] (groupID: String?, error: Error?, user: FIRUser?, ref: FIRDatabaseReference?, snap: FIRDataSnapshot?) -> Void in
             UIApplication.shared.hideNetworkLoader()
+            
+            weak var weakSelf = self
+            if weakSelf == nil { return }
+            
+            if error != nil {
+                weakSelf!.showAlert(title: "Unable to fetch your groups", message: "Some unknown error occured, please try again later", notiType: .error)
+                return
+            }
+            if snap == nil {
+                print("Snapshot not found")
+                return
+            }
+            
             OperationQueue.main.addOperation({
-                if error != nil {
-                    self.showAlert(title: "Unable to fetch your groups", message: "Some unknown error occured, please try again later", notiType: .error)
+                let postDictArray = snap!.value as? [String : AnyObject] ?? [:]
+                if postDictArray.count < 1 {
+                    // No groups found
+                    // Add atleast one group to continue
+                    let alertView = OpinionzAlertView(title: "No groups found", message: "Please add atleast one group to continue", cancelButtonTitle: "Cancel", otherButtonTitles: ["Add one group"], usingBlockWhenTapButton: { (alertView, index) in
+                        if index == 1 {
+                            weakSelf!.performSegue(withIdentifier: SegueConstants.addGroupScreenSegue, sender: weakSelf!)
+                        }
+                    })
+                    alertView?.iconType = OpinionzAlertIconInfo
+                    alertView?.show()
                 }
                 else {
-                    let postDictArray = snapshot!.value as? [String : AnyObject] ?? [:]
-                    if postDictArray.count < 1 {
-                        // No groups found
-                        // Add atleast one group to continue
-                        let alertView = OpinionzAlertView(title: "No groups found", message: "Please add atleast one group to continue", cancelButtonTitle: "Cancel", otherButtonTitles: ["Add one group"], usingBlockWhenTapButton: { (alertView, index) in
-                            if index == 1 {
-                                self.performSegue(withIdentifier: SegueConstants.addGroupScreenSegue, sender: self)
+                    // remove previous values
+                    weakSelf!.groupsArray.removeAll()
+                    // Loading the groups again
+                    for dict in postDictArray {
+                        if let innerDict = dict.value as? Dictionary<String, String> {
+                            let groupID = dict.key
+                            let grpName = innerDict["groupName"]
+                            var password = innerDict["password"]
+                            
+                            // Decrypt Password
+                            if !password!.isEmpty {
+                                password = password!.aesDecrypt(key: grpName!, iv: password!)
                             }
-                        })
-                        alertView?.iconType = OpinionzAlertIconInfo
-                        alertView?.show()
-                    }
-                    else {
-                        // remove previous values
-                        self.groupsArray.removeAll()
-                        // Loading the groups again
-                        for dict in postDictArray {
-                            if let innerDict = dict.value as? Dictionary<String, String> {
-                                let groupID = dict.key
-                                let grpName = innerDict["groupName"]
-                                var password = innerDict["password"]
-                                
-                                // Decrypt Password
-                                if !password!.isEmpty {
-                                    password = password!.aesDecrypt(key: grpName!, iv: password!)
-                                }
-                                let grpModel = GroupModel(id: groupID, grpName: grpName ?? "", grpPassword: password ?? "")
-                                self.groupsArray.append(grpModel)
-                            }
+                            let grpModel = GroupModel(groupID: groupID, groupName: grpName ?? "", groupPassword: password ?? "")
+                            weakSelf!.groupsArray.append(grpModel)
                         }
-                        self.tableView.reloadSections(IndexSet.init(integer: 0), with: .automatic)
                     }
+                    weakSelf!.tableView.reloadSections(IndexSet.init(integer: 0), with: .automatic)
                 }
             })
         }

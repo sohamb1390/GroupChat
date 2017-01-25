@@ -26,10 +26,10 @@
 		44A807291E10F53000B5924E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 44A807281E10F53000B5924E /* GoogleService-Info.plist */; };
 		44A8072D1E111D8D00B5924E /* SignInSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A8072C1E111D8D00B5924E /* SignInSignUpViewController.swift */; };
 		44ADAFD21E166FEF00278F30 /* RoundBorderedBlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ADAFD11E166FEF00278F30 /* RoundBorderedBlurView.swift */; };
-		44D5A8EA1E151FA900F070B2 /* FireBaseHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D5A8E91E151FA900F070B2 /* FireBaseHandler.swift */; };
 		44D5A8ED1E151FC700F070B2 /* GroupChatConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D5A8EB1E151FC700F070B2 /* GroupChatConstants.swift */; };
 		44D5A8EE1E151FC700F070B2 /* GroupChatExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D5A8EC1E151FC700F070B2 /* GroupChatExtension.swift */; };
 		44D5A8F01E15200B00F070B2 /* GroupChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D5A8EF1E15200B00F070B2 /* GroupChatViewModel.swift */; };
+		44DCFD9A1E360FD0000945B8 /* FirebaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44DCFD991E360FD0000945B8 /* FirebaseProtocol.swift */; };
 		5ECCD4661873606E17708C06 /* Pods_GroupChatUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DEB96C6F9F2C10A220218109 /* Pods_GroupChatUITests.framework */; };
 		8D4FDD4169E1CDA78E5C3C43 /* Pods_GroupChatTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 355EE7F59F2E8BDAE9B2BB71 /* Pods_GroupChatTests.framework */; };
 		F86902A7DCB40C7375FAD81B /* Pods_GroupChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0ACDF13C39D89710DC40BBC /* Pods_GroupChat.framework */; };
@@ -83,10 +83,10 @@
 		44A807281E10F53000B5924E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		44A8072C1E111D8D00B5924E /* SignInSignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInSignUpViewController.swift; sourceTree = "<group>"; };
 		44ADAFD11E166FEF00278F30 /* RoundBorderedBlurView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundBorderedBlurView.swift; sourceTree = "<group>"; };
-		44D5A8E91E151FA900F070B2 /* FireBaseHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FireBaseHandler.swift; sourceTree = "<group>"; };
 		44D5A8EB1E151FC700F070B2 /* GroupChatConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupChatConstants.swift; sourceTree = "<group>"; };
 		44D5A8EC1E151FC700F070B2 /* GroupChatExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupChatExtension.swift; sourceTree = "<group>"; };
 		44D5A8EF1E15200B00F070B2 /* GroupChatViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupChatViewModel.swift; sourceTree = "<group>"; };
+		44DCFD991E360FD0000945B8 /* FirebaseProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseProtocol.swift; sourceTree = "<group>"; };
 		59588D69D50898CCB003EAD6 /* Pods-GroupChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GroupChat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GroupChat/Pods-GroupChat.debug.xcconfig"; sourceTree = "<group>"; };
 		68752CC1A1021E5A3DEB70C3 /* Pods-GroupChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GroupChat.release.xcconfig"; path = "Pods/Target Support Files/Pods-GroupChat/Pods-GroupChat.release.xcconfig"; sourceTree = "<group>"; };
 		7044F013E49F60CAFE7A5F5A /* Pods-GroupChatTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GroupChatTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-GroupChatTests/Pods-GroupChatTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -212,8 +212,8 @@
 		44A8071D1E10EDC000B5924E /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				44D5A8E91E151FA900F070B2 /* FireBaseHandler.swift */,
 				4473D0551E1B60BB0060EAE4 /* NetworkHandler.swift */,
+				44DCFD991E360FD0000945B8 /* FirebaseProtocol.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -559,6 +559,7 @@
 				4473D0561E1B60BB0060EAE4 /* NetworkHandler.swift in Sources */,
 				448B8F061E263BD7007DF49E /* NSData+Base64.m in Sources */,
 				449110771E1F78F5000AEFD2 /* UserProfilePopupViewController.swift in Sources */,
+				44DCFD9A1E360FD0000945B8 /* FirebaseProtocol.swift in Sources */,
 				449E6BBA1E1E2B74001F16C1 /* ChatViewController.swift in Sources */,
 				44ADAFD21E166FEF00278F30 /* RoundBorderedBlurView.swift in Sources */,
 				449110741E1F78C7000AEFD2 /* PopupController.swift in Sources */,
@@ -569,7 +570,6 @@
 				44A8072D1E111D8D00B5924E /* SignInSignUpViewController.swift in Sources */,
 				44D5A8EE1E151FC700F070B2 /* GroupChatExtension.swift in Sources */,
 				44A807241E10EF6C00B5924E /* AddGroupViewController.swift in Sources */,
-				44D5A8EA1E151FA900F070B2 /* FireBaseHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
