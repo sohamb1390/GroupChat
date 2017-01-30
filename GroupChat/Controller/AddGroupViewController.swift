@@ -144,7 +144,7 @@ extension AddGroupViewController {
         UIApplication.shared.showNetworkLoader(messageText: "Adding your group")
         
         // Add group structure
-        let checkExistingGroupStruct = CheckGroupName(groupChildName: "Groups", currentGroupName: groupNameTextField.text!, ref: viewModel.ref)
+        let checkExistingGroupStruct = CheckGroupName(groupChildName: ChildNameConstants.groups, currentGroupName: groupNameTextField.text!, ref: viewModel.ref)
         checkExistingGroupStruct.checkGroupNameAlreadyExists { [weak self] (found) -> Void in
             weak var weakSelf = self
             if weakSelf == nil { return }
@@ -156,7 +156,7 @@ extension AddGroupViewController {
             else {
                 let encryptedPassword = weakSelf!.retypePwdTextField.text!.aesEncrypt(key: weakSelf!.groupNameTextField.text!, iv: weakSelf!.retypePwdTextField.text!)
                 
-                let addGroupStruct = AddGroup(groupChildName: "Groups", groupName: weakSelf!.groupNameTextField.text!, groupPassword: encryptedPassword, ref: weakSelf!.viewModel.ref, storageRef: weakSelf!.viewModel.storageReference, fireAuth: weakSelf!.viewModel.firebaseAuth)
+                let addGroupStruct = AddGroup(groupChildName: ChildNameConstants.groups, groupName: weakSelf!.groupNameTextField.text!, groupPassword: encryptedPassword, ref: weakSelf!.viewModel.ref, storageRef: weakSelf!.viewModel.storageReference, fireAuth: weakSelf!.viewModel.firebaseAuth)
                 
                 // Creating a group
                 addGroupStruct.triggerFirebase(completionHandler: { (groupID: String?, error: Error?, user: FIRUser?, ref: FIRDatabaseReference?, snap: FIRDataSnapshot?) in

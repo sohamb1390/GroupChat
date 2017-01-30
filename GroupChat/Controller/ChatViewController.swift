@@ -39,9 +39,9 @@ class ChatViewController: JSQMessagesViewController {
     lazy var outgoingBubbleImageView: JSQMessagesBubbleImage = self.setupOutgoingBubble()
     lazy var incomingBubbleImageView: JSQMessagesBubbleImage = self.setupIncomingBubble()
     private lazy var userIsTypingRef: FIRDatabaseReference = {
-        self.getRef().child("TypingIndicator").child(self.senderId) // 1
+        self.getRef().child(ChildNameConstants.typingIndicator).child(self.senderId)
     }()
-    private var localTyping = false // 2
+    private var localTyping = false
     var isTyping: Bool {
         get {
             return localTyping
@@ -53,7 +53,7 @@ class ChatViewController: JSQMessagesViewController {
         }
     }
     private lazy var usersTypingQuery: FIRDatabaseQuery = {
-        self.getRef().child("typingIndicator").queryOrderedByValue().queryEqual(toValue: true)
+        self.getRef().child(ChildNameConstants.typingIndicator).queryOrderedByValue().queryEqual(toValue: true)
     }()
     
     private var loggedInUsersArray: [FIRUser] = []
@@ -105,19 +105,20 @@ class ChatViewController: JSQMessagesViewController {
             guard let currentUser = viewModel.currentUser else {
                 return
             }
-            let fetchUserPhotoStruct = fetchMedia(ref: viewModel.ref, childName: "users", userID: currentUser.uid)
+            let fetchUserPhotoStruct = fetchMedia(ref: viewModel.ref, childName: ChildNameConstants.users, userID: currentUser.uid)
             
             fetchUserPhotoStruct.getUserPhoto(completionHandler: { [weak self] (image: UIImage?) -> Void in
                 weak var weakSelf = self
                 if weakSelf == nil { return }
-                
-                if let img = image {
-                    weakSelf!.btnUserProfile?.setImage(img, for: .normal)
-                    weakSelf!.btnUserProfile?.accessibilityValue = "Image"
-                }
-                else {
-                    weakSelf!.btnUserProfile?.setImage(UIImage.init(named: "defaultImage"), for: .normal)
-                }
+                OperationQueue.main.addOperation({ 
+                    if let img = image {
+                        weakSelf!.btnUserProfile?.setImage(img, for: .normal)
+                        weakSelf!.btnUserProfile?.accessibilityValue = "Image"
+                    }
+                    else {
+                        weakSelf!.btnUserProfile?.setImage(UIImage.init(named: "defaultImage"), for: .normal)
+                    }
+                })
             })
         }
         observeTyping()
@@ -165,7 +166,7 @@ class ChatViewController: JSQMessagesViewController {
     
     // MARK: - Observer
     private func observeMessages() {
-        messageRef = viewModel.ref.child("Chat").child(groupID!)
+        messageRef = viewModel.ref.child(ChildNameConstants.chat).child(groupID!)
         // 1.
         let messageQuery = messageRef.queryOrderedByKey() //messageRef.queryLimited(toLast:25)
         
@@ -175,7 +176,7 @@ class ChatViewController: JSQMessagesViewController {
             // 3
             let messageData = snapshot.value as! Dictionary<String, String>
             let key =  snapshot.key
-            if let id = messageData["chatUserID"] as String!, let name = messageData["chatSenderName"] as String!, let text = messageData["chatMessage"] as String!, let dateTime = messageData["chatDateTime"] as String!, text.characters.count > 0 {
+            if let id = messageData[ChildNameConstants.chatUserID] as String!, let name = messageData[ChildNameConstants.chatSenderName] as String!, let text = messageData[ChildNameConstants.chatMessage] as String!, let dateTime = messageData[ChildNameConstants.chatDateTime] as String!, text.characters.count > 0 {
                 // 4
                 
                 // Decrypting a chat using AES
@@ -184,7 +185,7 @@ class ChatViewController: JSQMessagesViewController {
                 
                 // 5
                 self.finishReceivingMessage(animated: true)
-            } else if let id = messageData["chatUserID"] as String!, let photoURL = messageData["mediaURL"] as String!, !photoURL.isEmpty, let name = messageData["chatSenderName"] as String! {
+            } else if let id = messageData[ChildNameConstants.chatUserID] as String!, let photoURL = messageData[ChildNameConstants.mediaURL] as String!, !photoURL.isEmpty, let name = messageData[ChildNameConstants.chatSenderName] as String! {
                 
                 // 2
                 if let mediaItem = JSQPhotoMediaItem(maskAsOutgoing: id == self.senderId) {
@@ -204,7 +205,7 @@ class ChatViewController: JSQMessagesViewController {
         
         removedMessageRefHandle = messageQuery.observe(.childRemoved, with: { (snapshot) -> Void in
             let messageData = snapshot.value as! Dictionary<String, String>
-            if let id = messageData["chatUserID"] {
+            if let id = messageData[ChildNameConstants.chatUserID] {
                 self.removeMessage(DeletedChatId: id, ChatKey: snapshot.key)
                 self.finishReceivingMessage()
             } else {
@@ -215,13 +216,13 @@ class ChatViewController: JSQMessagesViewController {
             let key = snapshot.key
             let messageData = snapshot.value as! Dictionary<String, String> // 1
             
-            if let photoURL = messageData["mediaURL"] as String! { // 2
+            if let photoURL = messageData[ChildNameConstants.mediaURL] as String! { // 2
                 // The photo has been updated.
                 if let mediaItem = self.photoMessageMap[key] { // 3
                     self.fetchImageDataAtURL(photoURL, forMediaItem: mediaItem, clearsPhotoMessageMapOnSuccessForKey: key)
                 }
                 else {
-                    if let id = messageData["chatUserID"] as String!, let mediaItem = JSQPhotoMediaItem(maskAsOutgoing: id == self.senderId), let name = messageData["chatSenderName"] as String! {
+                    if let id = messageData[ChildNameConstants.chatUserID] as String!, let mediaItem = JSQPhotoMediaItem(maskAsOutgoing: id == self.senderId), let name = messageData[ChildNameConstants.chatSenderName] as String! {
                         self.addPhotoMessage(withId: id, key: snapshot.key, displayName: name, mediaItem: mediaItem, chatId: key)
                         self.fetchImageDataAtURL(photoURL, forMediaItem: mediaItem, clearsPhotoMessageMapOnSuccessForKey: nil)
                     }
@@ -230,7 +231,7 @@ class ChatViewController: JSQMessagesViewController {
         })
     }
     private func observeTyping() {
-        let typingIndicatorRef = getRef().child("TypingIndicator")
+        let typingIndicatorRef = getRef().child(ChildNameConstants.typingIndicator)
         userIsTypingRef = typingIndicatorRef.child(senderId)
         userIsTypingRef.onDisconnectRemoveValue()
         
@@ -256,7 +257,7 @@ class ChatViewController: JSQMessagesViewController {
     
     // MARK: - Chat Controls
     private func getMessageRefrence() -> FIRDatabaseReference {
-        let messageRef = viewModel.ref.child("Chat").child(groupID!)
+        let messageRef = viewModel.ref.child(ChildNameConstants.chat).child(groupID!)
         messageRef.keepSynced(true)
         return messageRef
     }
@@ -402,7 +403,7 @@ class ChatViewController: JSQMessagesViewController {
         let chatModel = Chat(senderID: currentUser.uid, message: encryptedChat, mediaType: .Text, dateTime: date, mediaData: nil)
         
         // 2. Create the "New Chat Create Structure"
-        let createChatStruct = CreateChat(groupID: groupID!, chatChildName: "Chat", senderName: senderDisplayName, chatDetails: chatModel, mediaName: nil, ref: viewModel.ref, storageRef: viewModel.storageReference, fireAuth: viewModel.firebaseAuth)
+        let createChatStruct = CreateChat(groupID: groupID!, chatChildName: ChildNameConstants.chat, senderName: senderDisplayName, chatDetails: chatModel, mediaName: nil, ref: viewModel.ref, storageRef: viewModel.storageReference, fireAuth: viewModel.firebaseAuth)
         
         // 3. Trigger Firebase for sending this chat
         createChatStruct.triggerFirebase { [weak self] (groupID: String?, error: Error?, user: FIRUser?, ref: FIRDatabaseReference?, snap: FIRDataSnapshot?) -> Void in
@@ -456,7 +457,7 @@ class ChatViewController: JSQMessagesViewController {
         let chatModel = Chat(senderID: currentUser.uid, message: nil, mediaType: .Picture, dateTime: Date(), mediaData: data as Data)
         
         // 2. Create the "New Chat Create Structure"
-        let createChatStruct = CreateChat(groupID: groupID!, chatChildName: "Chat", senderName: senderDisplayName, chatDetails: chatModel, mediaName: imageName, ref: viewModel.ref, storageRef: viewModel.storageReference, fireAuth: viewModel.firebaseAuth)
+        let createChatStruct = CreateChat(groupID: groupID!, chatChildName: ChildNameConstants.chat, senderName: senderDisplayName, chatDetails: chatModel, mediaName: imageName, ref: viewModel.ref, storageRef: viewModel.storageReference, fireAuth: viewModel.firebaseAuth)
         
         // 3. Trigger Firebase for sending this chat
         createChatStruct.triggerFirebase { [weak self] (groupID: String?, error: Error?, user: FIRUser?, ref: FIRDatabaseReference?, snap: FIRDataSnapshot?) -> Void in
@@ -516,7 +517,7 @@ class ChatViewController: JSQMessagesViewController {
             print("Avatar is already downloaded, no need to download it")
         }
         else {
-            let fetchUserPhotoStruct = fetchMedia(ref: viewModel.ref, childName: "users", userID: message.senderId)
+            let fetchUserPhotoStruct = fetchMedia(ref: viewModel.ref, childName: ChildNameConstants.users, userID: message.senderId)
             
             fetchUserPhotoStruct.getUserPhoto(completionHandler: { [weak self] (image: UIImage?) -> Void in
                 weak var weakSelf = self

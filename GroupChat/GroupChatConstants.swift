@@ -24,6 +24,20 @@ struct SegueConstants {
 struct ColorConstants {
     static let baseColor = UIColor(red: 255.0/255.0, green: 98.0/255.0, blue: 76.0/255.0, alpha: 1.0)
 }
+struct ChildNameConstants {
+    static let groups = "Groups"
+    static let groupName = "groupName"
+    static let password = "password"
+    static let mediaURL = "mediaURL"
+    static let chat = "Chat"
+    static let chatUserID = "chatUserID"
+    static let chatSenderName = "chatSenderName"
+    static let chatMessage = "chatMessage"
+    static let chatDateTime = "chatDateTime"
+    static let users = "users"
+    static let userPhoto = "userPhoto"
+    static let typingIndicator = "TypingIndicator"
+}
 enum MediaType: String {
     case Text = "text", Picture = "picture", Audio = "audio", Video = "video"
 }

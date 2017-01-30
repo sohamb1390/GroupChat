@@ -164,7 +164,7 @@ class GroupsTableViewController: UITableViewController {
 
                 if index == 1 {
                     // Remove Group
-                    let removeGroupStruct = RemoveGroup(groupChildName: "Groups", groupID: grpModel.groupID!, chatChildName: "Chat", ref: weakSelf!.viewModel!.ref, storageRef: weakSelf!.viewModel!.storageReference, fireAuth: weakSelf!.viewModel!.firebaseAuth)
+                    let removeGroupStruct = RemoveGroup(groupChildName: ChildNameConstants.groups, groupID: grpModel.groupID!, chatChildName: ChildNameConstants.chat, ref: weakSelf!.viewModel!.ref, storageRef: weakSelf!.viewModel!.storageReference, fireAuth: weakSelf!.viewModel!.firebaseAuth)
                     
                     removeGroupStruct.triggerFirebase(completionHandler: { (groupID: String?, error: Error?, user: FIRUser?, ref: FIRDatabaseReference?, snap: FIRDataSnapshot?) in
                         if error == nil {
@@ -212,7 +212,7 @@ extension GroupsTableViewController {
         UIApplication.shared.showNetworkLoader(messageText: "Fetching your groups")
         
         // fetch Groups
-        let loadGroupsStruct = LoadGroup(groupChildName: "Groups", ref: viewModel!.ref, storageRef: viewModel!.storageReference, fireAuth: viewModel!.firebaseAuth)
+        let loadGroupsStruct = LoadGroup(groupChildName: ChildNameConstants.groups, ref: viewModel!.ref, storageRef: viewModel!.storageReference, fireAuth: viewModel!.firebaseAuth)
         loadGroupsStruct.triggerFirebase { [weak self] (groupID: String?, error: Error?, user: FIRUser?, ref: FIRDatabaseReference?, snap: FIRDataSnapshot?) -> Void in
             UIApplication.shared.hideNetworkLoader()
             
@@ -248,8 +248,8 @@ extension GroupsTableViewController {
                     for dict in postDictArray {
                         if let innerDict = dict.value as? Dictionary<String, String> {
                             let groupID = dict.key
-                            let grpName = innerDict["groupName"]
-                            var password = innerDict["password"]
+                            let grpName = innerDict[ChildNameConstants.groupName]
+                            var password = innerDict[ChildNameConstants.password]
                             
                             // Decrypt Password
                             if !password!.isEmpty {

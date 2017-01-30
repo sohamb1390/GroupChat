@@ -41,8 +41,8 @@ struct AddGroup: AddGroupProtcol {
         guard let dRef = ref else {
             return
         }
-        let parameters = ["groupName": groupName,
-                          "password": groupPassword]
+        let parameters = [ChildNameConstants.groupName: groupName,
+                          ChildNameConstants.password: groupPassword]
         dRef.child(groupChildName).childByAutoId().setValue(parameters) { (error, databaseRef) in
             completionHandler(databaseRef.key, error, nil, databaseRef, nil)
         }
@@ -184,7 +184,7 @@ struct SignUp: SignUpProtocol, MediaHandlerProtocol, ResendVerificationProtocol 
                 //store downloadURL
                 let downloadURL = metaData!.downloadURL()!.absoluteString
                 //store downloadURL at database
-                databaseRef.child("users").child(user.uid).updateChildValues(["userPhoto": downloadURL])
+                databaseRef.child(ChildNameConstants.users).child(user.uid).updateChildValues([ChildNameConstants.userPhoto: downloadURL])
                 completionHandler(true, URL(fileURLWithPath: downloadURL))
             }
         }
@@ -263,11 +263,11 @@ struct CreateChat: CreateChatProtocol {
         let dateTimeString = dateFormatter.string(from: chatDateTime)
         
         // Create Chat parameter
-        let parameters = ["chatUserID": userID,
-                          "chatSenderName": senderName,
-                          "chatMessage": chatMessage,
-                          "chatDateTime": dateTimeString,
-                          "mediaURL": ""]
+        let parameters = [ChildNameConstants.chatUserID: userID,
+                          ChildNameConstants.chatSenderName: senderName,
+                          ChildNameConstants.chatMessage: chatMessage,
+                          ChildNameConstants.chatDateTime: dateTimeString,
+                          ChildNameConstants.mediaURL: ""]
         
         if mediaType == .Audio || mediaType == .Picture || mediaType == .Video, mediaData != nil, mediaName != nil {
             var mediaExtension = ""
@@ -301,7 +301,7 @@ struct CreateChat: CreateChatProtocol {
                             self.ref!.child(self.chatChildName).child(self.groupID).child(databaseRef.key).observeSingleEvent(of: .value, with: { (snapshot) in
                                 if var dict = snapshot.value as? [String: Any] {
                                     
-                                    dict["mediaURL"] = downloadURL.absoluteString
+                                    dict[ChildNameConstants.mediaURL] = downloadURL.absoluteString
                                     dRef.child(self.chatChildName).child(self.groupID).child(databaseRef.key).setValue(dict)
                                     
                                     completionHandler(self.groupID, nil, nil, dRef, snapshot)
@@ -350,7 +350,7 @@ struct CheckGroupName: GroupNameCheckProtocol {
                 var found = false
                 for dict in postDictArray {
                     if let innerDict = dict.value as? Dictionary<String, String> {
-                        if innerDict["groupName"]?.uppercased() == self.currentGroupName.uppercased() {
+                        if innerDict[ChildNameConstants.groupName]?.uppercased() == self.currentGroupName.uppercased() {
                             found = true
                             break
                         }
